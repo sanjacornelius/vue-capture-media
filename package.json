@@ -1,7 +1,7 @@
 {
   "main": "./dist/vue-capture-media.common.js",
   "name": "@sanjac23/vue-capture-media",
-  "version": "0.1.25",
+  "version": "1.0.0",
   "private": false,
   "scripts": {
     "build-bundle": "vue-cli-service build --target lib --name vue-capture-media ./src/components/index.js",
