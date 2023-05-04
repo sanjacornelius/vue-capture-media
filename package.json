@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "private": false,
   "scripts": {
-    "build-bundle": "vue-cli-service build --target lib --name vue-capture-media ./src/components/index.js",
+    "build-bundle": "export NODE_OPTIONS=--openssl-legacy-provider && vue-cli-service build --target lib --name vue-capture-media ./src/components/index.js",
     "serve": "export NODE_OPTIONS=--openssl-legacy-provider && vue-cli-service serve",
     "build": "export NODE_OPTIONS=--openssl-legacy-provider && vue-cli-service build",
     "lint": "export NODE_OPTIONS=--openssl-legacy-provider && vue-cli-service lint",
