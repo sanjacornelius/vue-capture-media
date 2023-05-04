@@ -1,6 +1,6 @@
 <template>
   <section class="nav-bar-container">
-      <h1>vue-media-recorder</h1>
+      <h1>vue-capture-media</h1>
     <div id="nav">
       <router-link to="/">PhotoCapture Demo</router-link>|
       <router-link to="/video">VideoCapture Demo</router-link>|

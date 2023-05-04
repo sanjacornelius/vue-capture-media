@@ -25,7 +25,7 @@ export default {
       return `mailto:example@example.com?subject=Look At My Cool Video&body=Hey! i recorder a video For you!%0D%0A
 look at it Here%0D%0A
 ${this.videoUrl} %0D%0A%0D%0A
-I used https://yovelbecker.github.io/vue-media-recorder/ for it.`;
+I used https://github.com/sanjacornelius/vue-capture-media for it.`;
     }
   }
 };

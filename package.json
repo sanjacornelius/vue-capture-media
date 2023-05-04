@@ -1,10 +1,10 @@
 {
-  "main": "./dist/vue-media-recorder.common.js",
-  "name": "vue-media-recorder",
+  "main": "./dist/vue-capture-media.common.js",
+  "name": "@sanjac23/vue-capture-media",
   "version": "0.1.25",
   "private": false,
   "scripts": {
-    "build-bundle": "vue-cli-service build --target lib --name vue-media-recorder ./src/components/index.js",
+    "build-bundle": "vue-cli-service build --target lib --name vue-capture-media ./src/components/index.js",
     "serve": "export NODE_OPTIONS=--openssl-legacy-provider && vue-cli-service serve",
     "build": "export NODE_OPTIONS=--openssl-legacy-provider && vue-cli-service build",
     "lint": "export NODE_OPTIONS=--openssl-legacy-provider && vue-cli-service lint",
@@ -51,7 +51,7 @@
     "name": "Sanja Cornelius",
     "email": "sanjacornelius@gmail.com"
   },
-  "repository": "https://github.com/sanjacornelius/vue-media-recorder",
+  "repository": "https://github.com/sanjacornelius/vue-capture-media",
   "keywords": [
     "vue",
     "vueJS",

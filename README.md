@@ -1,19 +1,19 @@
-# vue-media-recorder
+# vue-capture-media
 
-vue-media-recorder makes it easy to capture media (Microphone, Camera, Video) in your Vue.js apps.
+vue-capture-media makes it easy to capture media (Microphone, Camera, Video) in your Vue.js apps.
 
 
 ## Installation
 
-Use the package manager [npm](https://nodejs.org) to install vue-media-recorder.
+Use the package manager [npm](https://nodejs.org) to install vue-capture-media.
 
 ```bash
-npm install vue-media-recorder
+npm install vue-capture-media
 ```
 
 ## Usage
 
-Using vue-media-recorder is easy:
+Using vue-capture-media is easy:
 
 ```
 <template>
@@ -24,7 +24,7 @@ Using vue-media-recorder is easy:
 </template>
 
 <script>
-import {PhotoCapture, VideoCapture} from 'vue-media-recorder'
+import {PhotoCapture, VideoCapture} from 'vue-capture-media'
 
 export default {
     data(){
