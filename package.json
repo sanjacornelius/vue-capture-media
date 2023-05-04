@@ -1,6 +1,6 @@
 {
   "main": "./dist/vue-capture-media.common.js",
-  "name": "@sanjac23/vue-capture-media",
+  "name": "vue-capture-media",
   "version": "1.0.0",
   "private": false,
   "scripts": {
