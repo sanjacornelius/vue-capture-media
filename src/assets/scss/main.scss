@@ -1,139 +1,148 @@
-@import url("https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900&display=swap");
 
-@font-face {
-  font-family: Clock;
-  src: url('~@/assets/fonts/digital-7 (mono).ttf');
-}
+// html,
+// body {
+//   margin: 0;
+//   padding: 0;
+//   background-color: rgb(224, 224, 224);
+//   // background-color: rgb(65, 65, 65);
+//   font-family: "Roboto", sans-serif;
+// }
 
+// // Nav menu scss
+// .nav-bar-container {
+//   margin-bottom: 80px;
+//   font-size: 25px;
+//   display: flex;
+//   flex-direction: column;
+//   align-items: center;
+//   box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.25);
 
-html,
-body {
-  margin: 0;
-  padding: 0;
-  background-color: rgb(224, 224, 224);
-  // background-color: rgb(65, 65, 65);
-  font-family: "Roboto", sans-serif;
-}
+//   #nav {
+//     display: flex;
+//     justify-content: center;
+//     align-items: center;
+//     color: rgb(46, 46, 46);
+//     * {
+//       margin: 10px;
+//     }
+//     a {
+//       color: rgb(46, 46, 46);
+//       text-decoration: none;
+//     }
+//   }
+// }
 
-// Nav menu scss
-.nav-bar-container {
-  margin-bottom: 80px;
-  font-size: 25px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.25);
+// //video-capture scss
+// .video-cap-container {
+//   display: flex;
+//   flex-direction: column;
+//   align-items: center;
+//   .stream-container {
+//     display: flex;
+//     flex-direction: column;
+//     align-items: center;
+//   }
+//   .controls {
+//     margin: 10px;
+//     .btn {
+//       margin: 10px;
+//     }
+//   }
+//   .camera,
+//   .preview {
+//     object-fit: fill;
+//   }
+//   .camera {
+//     width: 500px;
+//     // transform: scaleX(-1);
+//     // filter: FlipH;
+//     // transform: rotateY(180deg);
+//   }
+//   .error-video {
+//     font-size: 25px;
+//     color: #ba5151;
+//     margin: 10px;
+//   }
+// }
 
-  #nav {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: rgb(46, 46, 46);
-    * {
-      margin: 10px;
-    }
-    a {
-      color: rgb(46, 46, 46);
-      text-decoration: none;
-    }
-  }
-}
+// .photo-container {
+//   //photo-capture scss
+//   .photo-capture {
+//     // padding: 10px;
+//     // margin: 10px;
+//     width:100%;
+//     display: flex;
+//     flex-direction: column;
+//     align-items: center;
+//     justify-content: space-around;
+//     .camera,
+//     .preview {
+//       width: 100%;
+//       object-fit: fill;
+//     }
+//     // .camera {
+//     //   transform: scaleX(-1);
+//     //   filter: FlipH;
+//     // }
+//   }
 
-//video-capture scss
-.video-cap-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  .stream-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  .controls {
-    margin: 10px;
-    .btn {
-      margin: 10px;
-    }
-  }
-  .camera,
-  .preview {
-    object-fit: fill;
-  }
-  .camera {
-    width: 500px;
-    // transform: scaleX(-1);
-    // filter: FlipH;
-    // transform: rotateY(180deg);
-  }
-  .error-video {
-    font-size: 25px;
-    color: #ba5151;
-    margin: 10px;
-  }
-}
+//   .controls{
+//     display:flex;
+//     position:absolute;
+//     bottom: 10px;
+//     .btn {
+//       background: #ffffff;
+//       border-radius: 50%;
+//       color: #00000099;
+//       border: 2px solid #0000005e;
+//       box-shadow: 1px 4px 18px #000;
+//       text-align: center;
+//       font-size: 28px;
+//       height: 60px;
+//       width: 60px;
+//     }
+//   }
+// }
 
-//photo-capture scss
-.photo-capture {
-  // padding: 10px;
-  // margin: 10px;
-  max-width: 25%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-around;
-  .camera,
-  .preview {
-    width: 100%;
-    object-fit: fill;
-  }
-  // .camera {
-  //   transform: scaleX(-1);
-  //   filter: FlipH;
-  // }
-  .controls{
-    display:flex;
-  }
-}
+// //loader scss
+// .loader {
+//   margin: 0 auto;
+//   border: 16px solid #34495e; /* Light grey */
+//   border-top: 16px solid #41b883; /* Blue */
+//   border-radius: 50%;
+//   width: 80px;
+//   height: 80px;
+//   animation: spin 2s linear infinite;
+// }
 
-//loader scss
-.loader {
-  margin: 0 auto;
-  border: 16px solid #34495e; /* Light grey */
-  border-top: 16px solid #41b883; /* Blue */
-  border-radius: 50%;
-  width: 80px;
-  height: 80px;
-  animation: spin 2s linear infinite;
-}
+// .flex-center {
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+// }
 
-.flex-center {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+// .btn {
+//   outline: none;
+//   background-color: #2c3e50;
+//   cursor: pointer;
+//   display: flex;
+//   font-size: 1rem;
+//   margin: 20px;
+//   padding: 1.2em 2.8em;
+//   text-align: center;
+//   text-transform: uppercase;
+//   font-family: "Montserrat", sans-serif;
+//   font-weight: 700;
+//   border-radius: 3em;
+//   border: 2px solid #2ecc71;
+//   color: #2ecc71;
+// }
 
-.btn {
-  outline: none;
-  background-color: #2c3e50;
-  cursor: pointer;
-  display: flex;
-  font-size: 1rem;
-  margin: 20px;
-  padding: 1.2em 2.8em;
-  text-align: center;
-  text-transform: uppercase;
-  font-family: "Montserrat", sans-serif;
-  font-weight: 700;
-  border-radius: 3em;
-  border: 2px solid #2ecc71;
-  color: #2ecc71;
-}
-
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
+// @keyframes spin {
+//   0% {
+//     transform: rotate(0deg);
+//   }
+//   100% {
+//     transform: rotate(360deg);
+//   }
+// }
