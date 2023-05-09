@@ -10,10 +10,10 @@
       </template>
     </div>
     <Loader v-show="isUploading" />
-    <div class="controls" v-if="isFinished && !isUploading && uploadUrl">
+    <!-- <div class="controls" v-if="isFinished && !isUploading"> -->
       <button type="button" class="btn" @click.prevent="resetVideo">{{cancelBtnContent}}</button>
       <button type="button" class="btn" @click.prevent="done">{{doneBtnContent}}</button>
-    </div>
+    <!-- </div> -->
     <h1 class="error-video">{{errText}}</h1>
   </section>
 </template>
@@ -25,7 +25,7 @@ export default {
   props: {
     uploadUrl: {
       default: null
-    },
+    }, 
     recordBtnContent: {
       default: "Record"
     },
@@ -52,12 +52,13 @@ export default {
       recorder: null, // component wide MediaRecorder
       connection: null, // component wide WebSocket
       videoUrl: null, // link to video - assigned when done writing video file
-      stream: null
+      stream: null,
+      chunks: [],
     };
   },
   created() {
-    if (!this.uploadUrl) this.errText = "There is no upload url available";
-    this.getWebSocket(); // initialize connection to WebSocket
+    // if (!this.uploadUrl) this.errText = "There is no upload url available";
+    // this.getWebSocket(); // initialize connection to WebSocket
   },
   mounted() {
     this.resetVideo();
@@ -82,8 +83,10 @@ export default {
     },
     // start recoording
     record() {
-      if (!this.uploadUrl) return;
+      // if (!this.uploadUrl) return;
       this.recorder.start();
+      
+      console.log('RECORDING STARTED');
       this.isRecording = true;
     },
     // stop recording
@@ -91,7 +94,8 @@ export default {
       this.recorder.stop();
       this.isRecording = false;
       this.isFinished = true;
-      this.connection.send("DONE");
+      console.log('RECORDER STOPPED');
+      // this.connection.send("DONE");
     },
     // reset video diaply and emit video file url
     done() {
@@ -113,21 +117,27 @@ export default {
     // handle sending data for writing using the given WebSocket
     videoDataHandler(event) {
       this.isUploading = true;
-      let reader = new FileReader();
-      reader.readAsArrayBuffer(event.data);
-      reader.onloadend = () => {
-        this.connection.send(reader.result);
-      };
+      this.chunks.push(event.data);
+      console.log('VIDEO DATA HANDLER', event);
+      const blob = new Blob(this.chunks, {type: 'video/webm'});
+      const videoUrl = window.URL.createObjectURL(blob);
+      console.log('VIDEO UIRL', videoUrl);
+      this.$refs.videoRec.src = videoUrl;
+      // let reader = new FileReader();
+      // reader.readAsArrayBuffer(event.data);
+      // reader.onloadend = () => {
+      //   this.connection.send(reader.result);
+      // };
     },
     // initialize WebSocket
     getWebSocket() {
-      const websocketEndpoint = "wss://" + this.uploadUrl;
-      this.connection = new WebSocket(websocketEndpoint);
-      this.connection.binaryType = "arraybuffer";
-      this.connection.onmessage = message => {
-        this.updateVideoFile(message.data);
-        this.$refs.videoRec.muted = false;
-      };
+      // const websocketEndpoint = "wss://" + this.uploadUrl;
+      // this.connection = new WebSocket(websocketEndpoint);
+      // this.connection.binaryType = "arraybuffer";
+      // this.connection.onmessage = message => {
+      //   this.updateVideoFile(message.data);
+      //   this.$refs.videoRec.muted = false;
+      // };
     },
     // update video when file written
     updateVideoFile(fileName) {

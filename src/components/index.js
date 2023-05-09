@@ -5,7 +5,7 @@ import VideoCapture from "./VideoCapture.vue";
 
 export {
     PhotoCapture,
-    VideoCapture
+    VideoCapture,
 };
 
 
