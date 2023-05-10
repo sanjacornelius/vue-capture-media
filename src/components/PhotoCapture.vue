@@ -2,7 +2,7 @@
   <div>
     <div class="media-container">
       <mobile-component  v-show="isMobile" mode="photo" @uploadFile="uploadFile"></mobile-component>
-      <desktop-component v-show="!isMobile" mode="photo" :captureBtnIcon="captureBtnIcon" @uploadFile="uploadFile"></desktop-component>
+      <desktop-component v-show="!isMobile" mode="photo" :captureBtnIcon="captureBtnIcon" :uploadBtnIcon="uploadBtnIcon" @uploadFile="uploadFile"></desktop-component>
     </div>
   </div>
 </template>
@@ -18,7 +18,7 @@ export default {
     DesktopComponent,
   },
   mixins: [MobileDetection],
-  props: ['value', 'captureBtnIcon'],
+  props: ['value', 'captureBtnIcon', 'uploadBtnIcon'],
   data() {
     return {
     };

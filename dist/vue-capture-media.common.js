@@ -1719,7 +1719,7 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"592292e1-vue-loader-template"}!./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/babel-loader/lib!./node_modules/vue-loader/lib/loaders/templateLoader.js??ref--6!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/PhotoCapture.vue?vue&type=template&id=fb7f7138&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"592292e1-vue-loader-template"}!./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/babel-loader/lib!./node_modules/vue-loader/lib/loaders/templateLoader.js??ref--6!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/PhotoCapture.vue?vue&type=template&id=678cecb3&
 var render = function render() {
   var _vm = this,
     _c = _vm._self._c;
@@ -1747,7 +1747,8 @@ var render = function render() {
     }],
     attrs: {
       "mode": "photo",
-      "captureBtnIcon": _vm.captureBtnIcon
+      "captureBtnIcon": _vm.captureBtnIcon,
+      "uploadBtnIcon": _vm.uploadBtnIcon
     },
     on: {
       "uploadFile": _vm.uploadFile
@@ -1756,7 +1757,7 @@ var render = function render() {
 };
 var staticRenderFns = [];
 
-// CONCATENATED MODULE: ./src/components/PhotoCapture.vue?vue&type=template&id=fb7f7138&
+// CONCATENATED MODULE: ./src/components/PhotoCapture.vue?vue&type=template&id=678cecb3&
 
 // CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"592292e1-vue-loader-template"}!./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/babel-loader/lib!./node_modules/vue-loader/lib/loaders/templateLoader.js??ref--6!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/MobileComponent.vue?vue&type=template&id=96c9f3ae&
 var MobileComponentvue_type_template_id_96c9f3ae_render = function render() {
@@ -1929,8 +1930,8 @@ var component = normalizeComponent(
 )
 
 /* harmony default export */ var MobileComponent = (component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"592292e1-vue-loader-template"}!./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/babel-loader/lib!./node_modules/vue-loader/lib/loaders/templateLoader.js??ref--6!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/DesktopComponent.vue?vue&type=template&id=3b9a45fd&
-var DesktopComponentvue_type_template_id_3b9a45fd_render = function render() {
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"592292e1-vue-loader-template"}!./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/babel-loader/lib!./node_modules/vue-loader/lib/loaders/templateLoader.js??ref--6!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/DesktopComponent.vue?vue&type=template&id=df1db592&
+var DesktopComponentvue_type_template_id_df1db592_render = function render() {
   var _vm = this,
     _c = _vm._self._c;
   return _c('div', [_vm.isLoading ? _c('Loader') : _vm._e(), _c('div', {
@@ -1992,6 +1993,19 @@ var DesktopComponentvue_type_template_id_3b9a45fd_render = function render() {
     }
   }, [_c('i', {
     class: _vm.captureBtnIcon
+  })]), _c('button', {
+    class: 'btn flex-center ' + _vm.buttonsClasses,
+    attrs: {
+      "alt": "Upload Photo"
+    },
+    on: {
+      "click": function click($event) {
+        $event.preventDefault();
+        return _vm.uploadPhoto.apply(null, arguments);
+      }
+    }
+  }, [_c('i', {
+    class: _vm.uploadBtnIcon
   })])])]), _c('div', {
     directives: [{
       name: "show",
@@ -2024,9 +2038,9 @@ var DesktopComponentvue_type_template_id_3b9a45fd_render = function render() {
     }
   }, [_vm._v("STOP")])])])], 1);
 };
-var DesktopComponentvue_type_template_id_3b9a45fd_staticRenderFns = [];
+var DesktopComponentvue_type_template_id_df1db592_staticRenderFns = [];
 
-// CONCATENATED MODULE: ./src/components/DesktopComponent.vue?vue&type=template&id=3b9a45fd&
+// CONCATENATED MODULE: ./src/components/DesktopComponent.vue?vue&type=template&id=df1db592&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es7.symbol.async-iterator.js
 var es7_symbol_async_iterator = __webpack_require__("ac4d");
@@ -2104,7 +2118,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
   components: {
     Loader: Loader
   },
-  props: ['captureBtnIcon', 'mode'],
+  props: ['captureBtnIcon', 'mode', 'uploadBtnIcon'],
   data: function data() {
     return {
       isLoading: false,
@@ -2189,9 +2203,9 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       this.isPhotoTaken = !this.isPhotoTaken;
       var context = this.$refs.canvas.getContext('2d');
       context.drawImage(this.cameraElement, 0, 0, 450, 337.5);
-      this.$nextTick(function () {
-        _this2.$emit("uploadFile", _this2.$refs.canvas.toDataURL());
-      });
+    },
+    uploadPhoto: function uploadPhoto() {
+      this.$emit("uploadFile", this.$refs.canvas.toDataURL());
     },
     recordVideo: function recordVideo() {
       this.recorder.start();
@@ -2228,8 +2242,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
 var DesktopComponent_component = normalizeComponent(
   components_DesktopComponentvue_type_script_lang_js_,
-  DesktopComponentvue_type_template_id_3b9a45fd_render,
-  DesktopComponentvue_type_template_id_3b9a45fd_staticRenderFns,
+  DesktopComponentvue_type_template_id_df1db592_render,
+  DesktopComponentvue_type_template_id_df1db592_staticRenderFns,
   false,
   null,
   null,
@@ -2266,7 +2280,7 @@ function _readOnlyError(name) {
     DesktopComponent: DesktopComponent
   },
   mixins: [MobileDetection],
-  props: ['value', 'captureBtnIcon'],
+  props: ['value', 'captureBtnIcon', 'uploadBtnIcon'],
   data: function data() {
     return {};
   },

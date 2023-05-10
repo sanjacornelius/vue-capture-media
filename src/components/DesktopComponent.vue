@@ -9,10 +9,17 @@
           </div>
           <div class="controls">
           <button
-              :class="'btn flex-center '  + buttonsClasses"
-              @click.prevent="takePhoto"
-              alt="Capture Photo"
-              ><i :class="captureBtnIcon"></i></button>
+            :class="'btn flex-center '  + buttonsClasses"
+            @click.prevent="takePhoto"
+            alt="Capture Photo">
+            <i :class="captureBtnIcon"></i>
+          </button>
+          <button
+            :class="'btn flex-center '  + buttonsClasses"
+            @click.prevent="uploadPhoto"
+            alt="Upload Photo">
+            <i :class="uploadBtnIcon"></i>
+          </button>
           </div>
       </div>
 
@@ -38,7 +45,7 @@ export default {
   components:{
     Loader,
   },
-  props: ['captureBtnIcon', 'mode'],
+  props: ['captureBtnIcon', 'mode', 'uploadBtnIcon'],
   data() {
     return {
       isLoading: false,
@@ -129,9 +136,9 @@ export default {
       
       const context = this.$refs.canvas.getContext('2d');
       context.drawImage(this.cameraElement, 0, 0, 450, 337.5);
-      this.$nextTick(() => {
-        this.$emit("uploadFile", this.$refs.canvas.toDataURL());
-      });
+    },
+    uploadPhoto() {
+      this.$emit("uploadFile", this.$refs.canvas.toDataURL());
     },
     recordVideo() {
       this.recorder.start();
