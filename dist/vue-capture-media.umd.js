@@ -1420,6 +1420,20 @@ module.exports = function (fn, that, length) {
 
 /***/ }),
 
+/***/ "9c6c":
+/***/ (function(module, exports, __webpack_require__) {
+
+// 22.1.3.31 Array.prototype[@@unscopables]
+var UNSCOPABLES = __webpack_require__("2b4c")('unscopables');
+var ArrayProto = Array.prototype;
+if (ArrayProto[UNSCOPABLES] == undefined) __webpack_require__("32e9")(ArrayProto, UNSCOPABLES, {});
+module.exports = function (key) {
+  ArrayProto[UNSCOPABLES][key] = true;
+};
+
+
+/***/ }),
+
 /***/ "9def":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1466,6 +1480,71 @@ module.exports = !__webpack_require__("79e5")(function () {
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__("3a72")('asyncIterator');
+
+
+/***/ }),
+
+/***/ "ac6a":
+/***/ (function(module, exports, __webpack_require__) {
+
+var $iterators = __webpack_require__("cadf");
+var getKeys = __webpack_require__("0d58");
+var redefine = __webpack_require__("2aba");
+var global = __webpack_require__("7726");
+var hide = __webpack_require__("32e9");
+var Iterators = __webpack_require__("84f2");
+var wks = __webpack_require__("2b4c");
+var ITERATOR = wks('iterator');
+var TO_STRING_TAG = wks('toStringTag');
+var ArrayValues = Iterators.Array;
+
+var DOMIterables = {
+  CSSRuleList: true, // TODO: Not spec compliant, should be false.
+  CSSStyleDeclaration: false,
+  CSSValueList: false,
+  ClientRectList: false,
+  DOMRectList: false,
+  DOMStringList: false,
+  DOMTokenList: true,
+  DataTransferItemList: false,
+  FileList: false,
+  HTMLAllCollection: false,
+  HTMLCollection: false,
+  HTMLFormElement: false,
+  HTMLSelectElement: false,
+  MediaList: true, // TODO: Not spec compliant, should be false.
+  MimeTypeArray: false,
+  NamedNodeMap: false,
+  NodeList: true,
+  PaintRequestList: false,
+  Plugin: false,
+  PluginArray: false,
+  SVGLengthList: false,
+  SVGNumberList: false,
+  SVGPathSegList: false,
+  SVGPointList: false,
+  SVGStringList: false,
+  SVGTransformList: false,
+  SourceBufferList: false,
+  StyleSheetList: true, // TODO: Not spec compliant, should be false.
+  TextTrackCueList: false,
+  TextTrackList: false,
+  TouchList: false
+};
+
+for (var collections = getKeys(DOMIterables), i = 0; i < collections.length; i++) {
+  var NAME = collections[i];
+  var explicit = DOMIterables[NAME];
+  var Collection = global[NAME];
+  var proto = Collection && Collection.prototype;
+  var key;
+  if (proto) {
+    if (!proto[ITERATOR]) hide(proto, ITERATOR, ArrayValues);
+    if (!proto[TO_STRING_TAG]) hide(proto, TO_STRING_TAG, NAME);
+    Iterators[NAME] = ArrayValues;
+    if (explicit) for (key in $iterators) if (!proto[key]) redefine(proto, key, $iterators[key], true);
+  }
+}
 
 
 /***/ }),
@@ -1534,6 +1613,48 @@ module.exports = function (key) {
 
 /***/ }),
 
+/***/ "cadf":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var addToUnscopables = __webpack_require__("9c6c");
+var step = __webpack_require__("d53b");
+var Iterators = __webpack_require__("84f2");
+var toIObject = __webpack_require__("6821");
+
+// 22.1.3.4 Array.prototype.entries()
+// 22.1.3.13 Array.prototype.keys()
+// 22.1.3.29 Array.prototype.values()
+// 22.1.3.30 Array.prototype[@@iterator]()
+module.exports = __webpack_require__("01f9")(Array, 'Array', function (iterated, kind) {
+  this._t = toIObject(iterated); // target
+  this._i = 0;                   // next index
+  this._k = kind;                // kind
+// 22.1.5.2.1 %ArrayIteratorPrototype%.next()
+}, function () {
+  var O = this._t;
+  var kind = this._k;
+  var index = this._i++;
+  if (!O || index >= O.length) {
+    this._t = undefined;
+    return step(1);
+  }
+  if (kind == 'keys') return step(0, index);
+  if (kind == 'values') return step(0, O[index]);
+  return step(0, [index, O[index]]);
+}, 'values');
+
+// argumentsList[@@iterator] is %ArrayProto_values% (9.4.4.6, 9.4.4.7)
+Iterators.Arguments = Iterators.Array;
+
+addToUnscopables('keys');
+addToUnscopables('values');
+addToUnscopables('entries');
+
+
+/***/ }),
+
 /***/ "cb7c":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1597,6 +1718,16 @@ module.exports = function (it) {
     var key;
     while (symbols.length > i) if (isEnum.call(it, key = symbols[i++])) result.push(key);
   } return result;
+};
+
+
+/***/ }),
+
+/***/ "d53b":
+/***/ (function(module, exports) {
+
+module.exports = function (done, value) {
+  return { value: value, done: !!done };
 };
 
 
@@ -1728,32 +1859,20 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"592292e1-vue-loader-template"}!./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/babel-loader/lib!./node_modules/vue-loader/lib/loaders/templateLoader.js??ref--6!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/PhotoCapture.vue?vue&type=template&id=678cecb3&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"592292e1-vue-loader-template"}!./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/babel-loader/lib!./node_modules/vue-loader/lib/loaders/templateLoader.js??ref--6!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/PhotoCapture.vue?vue&type=template&id=3abfb437&
 var render = function render() {
   var _vm = this,
     _c = _vm._self._c;
   return _c('div', [_c('div', {
     staticClass: "media-container"
-  }, [_c('mobile-component', {
-    directives: [{
-      name: "show",
-      rawName: "v-show",
-      value: _vm.isMobile,
-      expression: "isMobile"
-    }],
+  }, [_vm.isMobile ? _c('mobile-component', {
     attrs: {
       "mode": "photo"
     },
     on: {
       "uploadFile": _vm.uploadFile
     }
-  }), _c('desktop-component', {
-    directives: [{
-      name: "show",
-      rawName: "v-show",
-      value: !_vm.isMobile,
-      expression: "!isMobile"
-    }],
+  }) : _vm._e(), !_vm.isMobile ? _c('desktop-component', {
     attrs: {
       "mode": "photo",
       "captureBtnIcon": _vm.captureBtnIcon,
@@ -1762,11 +1881,11 @@ var render = function render() {
     on: {
       "uploadFile": _vm.uploadFile
     }
-  })], 1)]);
+  }) : _vm._e()], 1)]);
 };
 var staticRenderFns = [];
 
-// CONCATENATED MODULE: ./src/components/PhotoCapture.vue?vue&type=template&id=678cecb3&
+// CONCATENATED MODULE: ./src/components/PhotoCapture.vue?vue&type=template&id=3abfb437&
 
 // CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"592292e1-vue-loader-template"}!./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/babel-loader/lib!./node_modules/vue-loader/lib/loaders/templateLoader.js??ref--6!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/MobileComponent.vue?vue&type=template&id=96c9f3ae&
 var MobileComponentvue_type_template_id_96c9f3ae_render = function render() {
@@ -1939,19 +2058,26 @@ var component = normalizeComponent(
 )
 
 /* harmony default export */ var MobileComponent = (component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"592292e1-vue-loader-template"}!./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/babel-loader/lib!./node_modules/vue-loader/lib/loaders/templateLoader.js??ref--6!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/DesktopComponent.vue?vue&type=template&id=df1db592&
-var DesktopComponentvue_type_template_id_df1db592_render = function render() {
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"592292e1-vue-loader-template"}!./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/babel-loader/lib!./node_modules/vue-loader/lib/loaders/templateLoader.js??ref--6!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/DesktopComponent.vue?vue&type=template&id=74e2975a&
+var DesktopComponentvue_type_template_id_74e2975a_render = function render() {
   var _vm = this,
     _c = _vm._self._c;
-  return _c('div', [_vm.isLoading ? _c('Loader') : _vm._e(), _c('div', {
+  return _c('div', [_c('Loader', {
     directives: [{
       name: "show",
       rawName: "v-show",
-      value: !_vm.isLoading && _vm.mode === 'photo',
-      expression: "!isLoading && mode === 'photo'"
+      value: _vm.isLoading,
+      expression: "isLoading"
+    }]
+  }), _c('div', {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: !_vm.isLoading,
+      expression: "!isLoading"
     }]
   }, [_c('div', {
-    staticClass: "photo-capture",
+    staticClass: "capture",
     class: {
       'flash': _vm.isShotPhoto
     }
@@ -1969,17 +2095,22 @@ var DesktopComponentvue_type_template_id_df1db592_render = function render() {
     }],
     ref: "camera",
     staticClass: "camera",
+    class: _vm.mode,
     attrs: {
       "width": 450,
       "height": 337.5,
+      "muted": "",
       "autoplay": ""
+    },
+    domProps: {
+      "muted": true
     }
   }), _c('canvas', {
     directives: [{
       name: "show",
       rawName: "v-show",
-      value: _vm.isPhotoTaken,
-      expression: "isPhotoTaken"
+      value: _vm.mode === 'photo' && _vm.isPhotoTaken,
+      expression: "mode === 'photo' && isPhotoTaken"
     }],
     ref: "canvas",
     staticClass: "preview",
@@ -1989,8 +2120,8 @@ var DesktopComponentvue_type_template_id_df1db592_render = function render() {
     }
   })]), _c('div', {
     staticClass: "controls"
-  }, [_c('button', {
-    class: 'btn flex-center ' + _vm.buttonsClasses,
+  }, [_vm.mode === 'photo' ? _c('button', {
+    staticClass: "btn btn-photo",
     attrs: {
       "alt": "Capture Photo"
     },
@@ -2002,54 +2133,45 @@ var DesktopComponentvue_type_template_id_df1db592_render = function render() {
     }
   }, [_c('i', {
     class: _vm.captureBtnIcon
-  })]), _c('button', {
-    class: 'btn flex-center ' + _vm.buttonsClasses,
+  }), _vm._v(" Photo\n          ")]) : _vm._e(), _vm.mode === 'video' && !_vm.isRecording && !_vm.isUploadReady ? _c('button', {
+    staticClass: "btn btn-record flex-center",
+    on: {
+      "click": _vm.recordVideo
+    }
+  }, [_c('i', {
+    class: _vm.recordBtnIcon
+  }), _vm._v(" Rec")]) : _vm._e(), _vm.mode === 'video' && _vm.isRecording ? _c('button', {
+    staticClass: "btn btn-stop",
+    on: {
+      "click": _vm.stopVideo
+    }
+  }, [_c('i', {
+    class: _vm.stopBtnIcon
+  }), _vm._v(" Stop")]) : _vm._e(), _vm.mode === 'video' && !_vm.isRecording && _vm.isUploadReady ? _c('button', {
+    staticClass: "btn btn-retake",
+    on: {
+      "click": _vm.resetVideo
+    }
+  }, [_c('i', {
+    class: _vm.retakeBtnIcon
+  }), _vm._v(" Retake")]) : _vm._e(), _vm.isUploadReady ? _c('button', {
+    staticClass: "btn btn-upload",
     attrs: {
-      "alt": "Upload Photo"
+      "alt": "Upload"
     },
     on: {
       "click": function click($event) {
         $event.preventDefault();
-        return _vm.uploadPhoto.apply(null, arguments);
+        return _vm.uploadFile.apply(null, arguments);
       }
     }
   }, [_c('i', {
     class: _vm.uploadBtnIcon
-  })])])]), _c('div', {
-    directives: [{
-      name: "show",
-      rawName: "v-show",
-      value: !_vm.isLoading && _vm.mode === 'video',
-      expression: "!isLoading && mode === 'video'"
-    }]
-  }, [_c('video', {
-    ref: "videoPreview",
-    staticClass: "video-preview",
-    attrs: {
-      "muted": "",
-      "loop": "",
-      "autoplay": ""
-    },
-    domProps: {
-      "muted": true
-    }
-  }), _c('div', {
-    staticClass: "controls"
-  }, [!_vm.isRecording ? _c('button', {
-    staticClass: "btn flex-center",
-    on: {
-      "click": _vm.recordVideo
-    }
-  }, [_vm._v("RECORD")]) : _c('button', {
-    staticClass: "btn",
-    on: {
-      "click": _vm.stopVideo
-    }
-  }, [_vm._v("STOP")])])])], 1);
+  }), _vm._v(" Upload\n          ")]) : _vm._e()])])], 1);
 };
-var DesktopComponentvue_type_template_id_df1db592_staticRenderFns = [];
+var DesktopComponentvue_type_template_id_74e2975a_staticRenderFns = [];
 
-// CONCATENATED MODULE: ./src/components/DesktopComponent.vue?vue&type=template&id=df1db592&
+// CONCATENATED MODULE: ./src/components/DesktopComponent.vue?vue&type=template&id=74e2975a&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es7.symbol.async-iterator.js
 var es7_symbol_async_iterator = __webpack_require__("ac4d");
@@ -2068,6 +2190,9 @@ var es6_function_name = __webpack_require__("7f7f");
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.regexp.to-string.js
 var es6_regexp_to_string = __webpack_require__("6b54");
+
+// EXTERNAL MODULE: ./node_modules/core-js/modules/web.dom.iterable.js
+var web_dom_iterable = __webpack_require__("ac6a");
 
 // CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"592292e1-vue-loader-template"}!./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/babel-loader/lib!./node_modules/vue-loader/lib/loaders/templateLoader.js??ref--6!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Loader.vue?vue&type=template&id=658a512f&
 var Loadervue_type_template_id_658a512f_render = function render() {
@@ -2118,6 +2243,7 @@ var Loader_component = normalizeComponent(
 
 
 
+
 function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
@@ -2127,77 +2253,60 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
   components: {
     Loader: Loader
   },
-  props: ['captureBtnIcon', 'mode', 'uploadBtnIcon'],
+  props: ['captureBtnIcon', 'mode', 'uploadBtnIcon', 'stopBtnIcon', 'recordBtnIcon', 'retakeBtnIcon'],
   data: function data() {
     return {
       isLoading: false,
-      isCameraOpen: false,
       isPhotoTaken: false,
       isShotPhoto: false,
       isRecording: false,
       recorder: null,
-      videoPreview: null,
-      cameraElement: null,
-      canvasElement: null,
-      videoRecorder: null,
-      stream: null
+      stream: null,
+      videoUrl: null,
+      isUploadReady: false
     };
   },
   mounted: function mounted() {
-    var constraints = {};
-    if (this.mode === 'photo') {
-      this.cameraElement = this.$refs.camera;
-      this.canvasElement = this.$refs.canvas;
-      constraints = {
-        audio: false,
-        video: true
-      };
-    } else if (this.mode === 'video') {
-      this.videoRecorder = this.$refs.videoRecorder;
-      this.videoPreview = this.$refs.videoPreview;
-      constraints = {
-        audio: true,
-        video: true
-      };
-    }
-    this.createCameraElement(constraints);
+    this.createCameraElement();
   },
   methods: {
-    createCameraElement: function createCameraElement(constraints) {
+    createCameraElement: function createCameraElement() {
       var _this = this;
       this.isLoading = true;
-      navigator.mediaDevices.getUserMedia(constraints).then(function (stream) {
+      navigator.mediaDevices.getUserMedia({
+        audio: true,
+        video: true
+      }).then(function (stream) {
         _this.isLoading = false;
-        switch (_this.mode) {
-          case 'photo':
-            _this.cameraElement.srcObject = stream;
-            break;
-          case 'video':
-            var chunks = [];
-            _this.$refs.videoPreview.srcObject = stream;
-            _this.stream = stream;
-            var options = {
-              mimeType: "video/webm",
-              audioBitsPerSecond: 128000
-            };
-            _this.recorder = new MediaRecorder(new MediaStream(stream.getVideoTracks()), options);
-            _this.recorder.ondataavailable = function (e) {
-              chunks.push(e.data);
-            };
-            _this.recorder.onstop = function (e) {
-              _this.$refs.videoPreview.controls = true;
-              var blob = new Blob(chunks, {
-                type: 'video/webm'
-              });
-              chunks = [];
-              var videoUrl = URL.createObjectURL(blob);
-              _this.$refs.videoPreview.src = videoUrl;
-            };
-            break;
+        _this.$refs.camera.srcObject = stream;
+        if (_this.mode === 'video') {
+          var chunks = [];
+          _this.$refs.camera.srcObject = stream;
+          _this.stream = stream;
+          var options = {
+            mimeType: "video/webm",
+            audioBitsPerSecond: 128000
+          };
+          _this.recorder = new MediaRecorder(new MediaStream(stream), options);
+          _this.recorder.ondataavailable = function (e) {
+            chunks.push(e.data);
+          };
+          _this.recorder.onstop = function (e) {
+            _this.$refs.camera.controls = !_this.$refs.camera.controls;
+            _this.$refs.camera.autoplay = !_this.$refs.camera.autoplay;
+            _this.$refs.camera.muted = !_this.$refs.camera.muted;
+            var blob = new Blob(chunks, {
+              type: "video/webm"
+            });
+            chunks = [];
+            _this.videoUrl = URL.createObjectURL(blob);
+            _this.$refs.camera.src = _this.videoUrl;
+          };
         }
       }).catch(function (error) {
-        _this.isLoading = false;
-        alert("The browser didn't support or there is some errors.");
+        setTimeout(function () {
+          _this.isLoading = false;
+        }, 1000);
       });
     },
     takePhoto: function takePhoto() {
@@ -2211,10 +2320,16 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       }
       this.isPhotoTaken = !this.isPhotoTaken;
       var context = this.$refs.canvas.getContext('2d');
-      context.drawImage(this.cameraElement, 0, 0, 450, 337.5);
+      context.drawImage(this.$refs.camera, 0, 0, 450, 337.5);
+      this.isUploadReady = true;
     },
-    uploadPhoto: function uploadPhoto() {
-      this.$emit("uploadFile", this.$refs.canvas.toDataURL());
+    uploadFile: function uploadFile() {
+      if (this.mode === 'video') {
+        this.$emit("uploadFile", this.videoUrl);
+      } else {
+        this.$emit("uploadFile", this.$refs.canvas.toDataURL());
+      }
+      this.isUploadReady = false;
     },
     recordVideo: function recordVideo() {
       this.recorder.start();
@@ -2234,9 +2349,23 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       } finally {
         _iterator.f();
       }
-      this.$refs.videoPreview.srcObject = null;
+      this.$refs.camera.srcObject = null;
       this.isRecording = false;
+      this.isUploadReady = true;
+    },
+    resetVideo: function resetVideo() {
+      this.$refs.camera.controls = !this.$refs.camera.controls;
+      this.$refs.camera.autoplay = !this.$refs.camera.autoplay;
+      this.$refs.camera.muted = !this.$refs.camera.muted;
+      this.isUploadReady = false;
+      this.isRecording = false;
+      this.createCameraElement();
     }
+  },
+  destroyed: function destroyed() {
+    this.stream.getTracks().forEach(function (track) {
+      track.stop();
+    });
   }
 });
 // CONCATENATED MODULE: ./src/components/DesktopComponent.vue?vue&type=script&lang=js&
@@ -2251,8 +2380,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
 var DesktopComponent_component = normalizeComponent(
   components_DesktopComponentvue_type_script_lang_js_,
-  DesktopComponentvue_type_template_id_df1db592_render,
-  DesktopComponentvue_type_template_id_df1db592_staticRenderFns,
+  DesktopComponentvue_type_template_id_74e2975a_render,
+  DesktopComponentvue_type_template_id_74e2975a_staticRenderFns,
   false,
   null,
   null,
@@ -2295,7 +2424,6 @@ function _readOnlyError(name) {
   },
   methods: {
     uploadFile: function uploadFile(event) {
-      console.log('UPLOAD FILE EVENT', event);
       this.$emit('uploadFile', event);
     }
   },
@@ -2325,44 +2453,37 @@ var PhotoCapture_component = normalizeComponent(
 )
 
 /* harmony default export */ var PhotoCapture = (PhotoCapture_component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"592292e1-vue-loader-template"}!./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/babel-loader/lib!./node_modules/vue-loader/lib/loaders/templateLoader.js??ref--6!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/VideoCapture.vue?vue&type=template&id=14e9e1a6&
-var VideoCapturevue_type_template_id_14e9e1a6_render = function render() {
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"592292e1-vue-loader-template"}!./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/babel-loader/lib!./node_modules/vue-loader/lib/loaders/templateLoader.js??ref--6!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/VideoCapture.vue?vue&type=template&id=14965294&
+var VideoCapturevue_type_template_id_14965294_render = function render() {
   var _vm = this,
     _c = _vm._self._c;
   return _c('div', {
-    staticClass: "video-container"
-  }, [_c('mobile-component', {
-    directives: [{
-      name: "show",
-      rawName: "v-show",
-      value: _vm.isMobile,
-      expression: "isMobile"
-    }],
+    staticClass: "media-container"
+  }, [_vm.isMobile ? _c('mobile-component', {
     attrs: {
       "mode": "video"
     },
     on: {
       "uploadFile": _vm.uploadFile
     }
-  }), _c('desktop-component', {
-    directives: [{
-      name: "show",
-      rawName: "v-show",
-      value: !_vm.isMobile,
-      expression: "!isMobile"
-    }],
+  }) : _vm._e(), !_vm.isMobile ? _c('desktop-component', {
     attrs: {
       "mode": "video",
-      "captureBtnIcon": _vm.captureBtnIcon
+      "playBtnIcon": _vm.playBtnIcon,
+      "captureBtnIcon": _vm.captureBtnIcon,
+      "recordBtnIcon": _vm.recordBtnIcon,
+      "stopBtnIcon": _vm.stopBtnIcon,
+      "retakeBtnIcon": _vm.retakeBtnIcon,
+      "uploadBtnIcon": _vm.uploadBtnIcon
     },
     on: {
       "uploadFile": _vm.uploadFile
     }
-  })], 1);
+  }) : _vm._e()], 1);
 };
-var VideoCapturevue_type_template_id_14e9e1a6_staticRenderFns = [];
+var VideoCapturevue_type_template_id_14965294_staticRenderFns = [];
 
-// CONCATENATED MODULE: ./src/components/VideoCapture.vue?vue&type=template&id=14e9e1a6&
+// CONCATENATED MODULE: ./src/components/VideoCapture.vue?vue&type=template&id=14965294&
 
 // CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/VideoCapture.vue?vue&type=script&lang=js&
 
@@ -2371,6 +2492,7 @@ var VideoCapturevue_type_template_id_14e9e1a6_staticRenderFns = [];
 /* harmony default export */ var VideoCapturevue_type_script_lang_js_ = ({
   name: "VideoCapture",
   mixins: [MobileDetection],
+  props: ['recordBtnIcon', 'captureBtnIcon', 'stopBtnIcon', 'playBtnIcon', 'retakeBtnIcon', 'uploadBtnIcon'],
   components: {
     MobileComponent: MobileComponent,
     DesktopComponent: DesktopComponent
@@ -2382,6 +2504,9 @@ var VideoCapturevue_type_template_id_14e9e1a6_staticRenderFns = [];
     uploadFile: function uploadFile(event) {
       this.$emit('uploadFile', event);
     }
+  },
+  mounted: function mounted() {
+    console.log('VIDEO CAPTURE MOUNTED');
   }
 });
 // CONCATENATED MODULE: ./src/components/VideoCapture.vue?vue&type=script&lang=js&
@@ -2396,8 +2521,8 @@ var VideoCapturevue_type_template_id_14e9e1a6_staticRenderFns = [];
 
 var VideoCapture_component = normalizeComponent(
   components_VideoCapturevue_type_script_lang_js_,
-  VideoCapturevue_type_template_id_14e9e1a6_render,
-  VideoCapturevue_type_template_id_14e9e1a6_staticRenderFns,
+  VideoCapturevue_type_template_id_14965294_render,
+  VideoCapturevue_type_template_id_14965294_staticRenderFns,
   false,
   null,
   null,

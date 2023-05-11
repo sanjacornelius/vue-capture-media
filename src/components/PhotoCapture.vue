@@ -1,8 +1,8 @@
 <template>
   <div>
     <div class="media-container">
-      <mobile-component  v-show="isMobile" mode="photo" @uploadFile="uploadFile"></mobile-component>
-      <desktop-component v-show="!isMobile" mode="photo" :captureBtnIcon="captureBtnIcon" :uploadBtnIcon="uploadBtnIcon" @uploadFile="uploadFile"></desktop-component>
+      <mobile-component  v-if="isMobile" mode="photo" @uploadFile="uploadFile"></mobile-component>
+      <desktop-component v-if="!isMobile" mode="photo" :captureBtnIcon="captureBtnIcon" :uploadBtnIcon="uploadBtnIcon" @uploadFile="uploadFile"></desktop-component>
     </div>
   </div>
 </template>
@@ -25,7 +25,6 @@ export default {
   },
   methods: {
     uploadFile(event) {
-      console.log('UPLOAD FILE EVENT', event);
       this.$emit('uploadFile', event);
     }
    },
