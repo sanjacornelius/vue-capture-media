@@ -1,26 +1,12 @@
 <template>
-  <div>
-    <div class="media-container">
-      <mobile-component  v-if="isMobile" mode="photo" @uploadFile="uploadFile"></mobile-component>
-      <desktop-component 
-        v-if="!isMobile" 
-        mode="photo" 
-        :cameraWidth="cameraWidth"
-        :cameraHeight="cameraHeight"
-        :playBtnIcon="playBtnIcon" 
-        :captureBtnIcon="captureBtnIcon" 
-        :recordBtnIcon="recordBtnIcon" 
-        :stopBtnIcon="stopBtnIcon" 
-        :retakeBtnIcon="retakeBtnIcon" 
-        :uploadBtnIcon="uploadBtnIcon"
-        :photoText="photoText"
-        :stopText="stopText"
-        :retakeText="retakeText"
-        :uploadText="uploadText"
-        @uploadFile="uploadFile">
-      </desktop-component>
-    </div>
-  </div>
+  <div class="media-container">
+    <!-- Use dynamic components to render either MobileComponent or DesktopComponent based on isMobile flag -->
+     <component :is="captureComponent" 
+       mode="photo"
+       v-bind="captureComponentProps"
+       @uploadFile="uploadFile">
+     </component>
+   </div>
 </template>
 
 <script>
@@ -28,36 +14,53 @@ import MobileComponent from "./MobileComponent.vue";
 import DesktopComponent from "./DesktopComponent.vue";
 import MobileDetection from '../mixins/MobileDetection';
 export default {
-  name: "PhotoCapture",
-  components:{
-    MobileComponent,
-    DesktopComponent,
-  },
-  mixins: [MobileDetection],
-  props: [
-    'cameraWidth',
-    'cameraHeight',
-    'captureBtnIcon', 
-    'uploadBtnIcon', 
-    'stopBtnIcon', 
-    'recordBtnIcon', 
-    'retakeBtnIcon',
-    'photoText',
-    'stopText',
-    'retakeText',
-    'uploadText'
-  ],
-  data() {
-    return {
-    };
-  },
-  methods: {
-    uploadFile(event) {
-      this.$emit('uploadFile', event);
-    }
+ name: "VideoCapture",
+ mixins: [MobileDetection],
+ props: [
+   'cameraWidth',
+   'cameraHeight',
+   'captureBtnIcon', 
+   'uploadBtnIcon', 
+   'stopBtnIcon', 
+   'recordBtnIcon', 
+   'retakeBtnIcon',
+   'photoText',
+   'stopText',
+   'retakeText',
+   'uploadText'
+ ],
+ components: {
+   MobileComponent,
+   DesktopComponent,
+ },
+ computed: {
+   captureComponent() {
+     // Determin which component to use based on isMobile flag
+     return this.isMobile ? 'MobileComponent' : 'DesktopComponent';
    },
-   mounted() {
-    console.log('MOIUNTED VUE CAPTURE', this.isMobile);
+   captureComponentProps() {
+      // Dynamically set props based on isMobile flag
+      return this.isMobile ? {} : {
+         cameraWidth: this.cameraWidth,
+         cameraHeight: this.cameraHeight,
+         playBtnIcon: this.playBtnIcon,
+         captureBtnIcon: this.captureBtnIcon,
+         recordBtnIcon: this.recordBtnIcon,
+         stopBtnIcon: this.stopBtnIcon,
+         retakeBtnIcon: this.retakeBtnIcon,
+         uploadBtnIcon: this.uploadBtnIcon,
+         photoText: this.photoText,
+         stopText: this.stopText,
+         retakeText: this.retakeText,
+         uploadText: this.uploadText
+       };
    }
+ },
+ methods: {
+   uploadFile(event) {
+     // Emit event up to parent component
+     this.$emit('uploadFile', event);
+   }
+ }
 };
 </script>

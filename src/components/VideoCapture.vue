@@ -1,23 +1,11 @@
 <template>
    <div class="media-container">
-      <mobile-component  v-if="isMobile" mode="video" @uploadFile="uploadFile"></mobile-component>
-      <desktop-component 
-        v-if="!isMobile" 
-        mode="video" 
-        :cameraWidth="cameraWidth"
-        :cameraHeight="cameraHeight"
-        :playBtnIcon="playBtnIcon" 
-        :captureBtnIcon="captureBtnIcon" 
-        :recordBtnIcon="recordBtnIcon" 
-        :stopBtnIcon="stopBtnIcon" 
-        :retakeBtnIcon="retakeBtnIcon" 
-        :uploadBtnIcon="uploadBtnIcon"
-        :photoText="photoText"
-        :stopText="stopText"
-        :retakeText="retakeText"
-        :uploadText="uploadText"
+      <!-- Use dynamic components to render either MobileComponent or DesktopComponent based on isMobile flag -->
+      <component :is="captureComponent" 
+        mode="video"
+        v-bind="captureComponentProps"
         @uploadFile="uploadFile">
-      </desktop-component>
+      </component>
     </div>
 </template>
 
@@ -45,17 +33,34 @@ export default {
     MobileComponent,
     DesktopComponent,
   },
-  data() {
-    return {
-    };
+  computed: {
+    captureComponent() {
+      // Determin which component to use based on isMobile flag
+      return this.isMobile ? 'MobileComponent' : 'DesktopComponent';
+    },
+    captureComponentProps() {
+       // Dynamically set props based on isMobile flag
+       return this.isMobile ? {} : {
+          cameraWidth: this.cameraWidth,
+          cameraHeight: this.cameraHeight,
+          playBtnIcon: this.playBtnIcon,
+          captureBtnIcon: this.captureBtnIcon,
+          recordBtnIcon: this.recordBtnIcon,
+          stopBtnIcon: this.stopBtnIcon,
+          retakeBtnIcon: this.retakeBtnIcon,
+          uploadBtnIcon: this.uploadBtnIcon,
+          photoText: this.photoText,
+          stopText: this.stopText,
+          retakeText: this.retakeText,
+          uploadText: this.uploadText
+        };
+    }
   },
   methods: {
     uploadFile(event) {
+      // Emit event up to parent component
       this.$emit('uploadFile', event);
     }
-  },
-  mounted() {
-    console.log('VIDEO CAPTURE MOUNTED');
   }
 };
 </script>
