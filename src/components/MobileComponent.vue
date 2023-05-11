@@ -1,22 +1,22 @@
 <template>
-    <div>
-        <input v-show="mode === 'video'" type="file" accept="video/*;capture=camcorder" @change="uploadFile"/>
-        <input v-show="mode === 'photo'" type="file" accept="image/*;capture=camera" @change="uploadFile"/>
-    </div>
+  <div>
+    <input :type="mode === 'video' ? 'file' : 'hidden'" 
+           accept="video/*" capture="camcorder"
+           @change="handleFileInput"/>
+    <input :type="mode === 'photo' ? 'file' : 'hidden'" 
+           accept="image/*" capture="capture"
+           @change="handleFileInput"/>
+  </div>
 </template>
 
 <script>
 export default {
-  name: "MobileComponent",
+  name: 'MobileComponent',
   props: ['mode'],
-  data() {
-    return {
-    };
-  },
   methods: {
-    uploadFile(event) {
-        this.$emit("uploadFile", event);
-    },
+    handleFileInput(event) {
+      this.$emit('uploadFile', event);
+    }
   }
 };
 </script>
