@@ -100,6 +100,7 @@ export default {
       recorder: null,
       stream: null,
       videoUrl: null,
+      blob: null,
       isUploadReady: false,
       showErrorMessage: false,
       errorMessage: null,
@@ -131,13 +132,13 @@ export default {
             chunks.push(e.data);
           };
           
-          this.recorder.onstop = (e) => {
+          this.recorder.onstop = () => {
             this.$refs.camera.controls = !this.$refs.camera.controls;
             this.$refs.camera.autoplay = !this.$refs.camera.autoplay;
             this.$refs.camera.muted = !this.$refs.camera.muted;
-            const blob = new Blob(chunks, {type: "video/webm"});
+            this.blob = new Blob(chunks, {type: "video/webm"});
             chunks = [];
-            this.videoUrl = URL.createObjectURL(blob);
+            this.videoUrl = URL.createObjectURL(this.blob);
             this.$refs.camera.src = this.videoUrl;
           };
         }
@@ -150,7 +151,6 @@ export default {
           this.showErrorMessage = true;
           this.errorMessage = message;
         }
-        console.log('Error message: ', message);
       });
     },
     takePhoto() {
@@ -162,7 +162,7 @@ export default {
     },
     uploadFile() {
       if (this.mode === 'video') {
-        this.$emit("uploadFile", this.videoUrl);  
+        this.$emit("uploadFile", {"url": this.videoUrl, "mimeType": "video/webm", "blob": this.blob});  
       } else {
         this.$emit("uploadFile", this.$refs.canvas.toDataURL());
       }

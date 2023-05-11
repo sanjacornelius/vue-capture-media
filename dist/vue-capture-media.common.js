@@ -2028,8 +2028,8 @@ var component = normalizeComponent(
 )
 
 /* harmony default export */ var MobileComponent = (component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"592292e1-vue-loader-template"}!./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/babel-loader/lib!./node_modules/vue-loader/lib/loaders/templateLoader.js??ref--6!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/DesktopComponent.vue?vue&type=template&id=492880d9&
-var DesktopComponentvue_type_template_id_492880d9_render = function render() {
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"592292e1-vue-loader-template"}!./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/babel-loader/lib!./node_modules/vue-loader/lib/loaders/templateLoader.js??ref--6!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/DesktopComponent.vue?vue&type=template&id=abed6454&
+var DesktopComponentvue_type_template_id_abed6454_render = function render() {
   var _vm = this,
     _c = _vm._self._c;
   return _c('div', [_c('Loader', {
@@ -2128,9 +2128,9 @@ var DesktopComponentvue_type_template_id_492880d9_render = function render() {
     class: _vm.uploadBtnIcon
   }) : _vm._e(), _vm._v(" " + _vm._s(_vm.uploadText) + "\n      ")]) : _vm._e()])]), _vm.showErrorMessage ? _c('div', [_vm._v("\n    " + _vm._s(_vm.errorMessage) + "\n  ")]) : _vm._e()], 1);
 };
-var DesktopComponentvue_type_template_id_492880d9_staticRenderFns = [];
+var DesktopComponentvue_type_template_id_abed6454_staticRenderFns = [];
 
-// CONCATENATED MODULE: ./src/components/DesktopComponent.vue?vue&type=template&id=492880d9&
+// CONCATENATED MODULE: ./src/components/DesktopComponent.vue?vue&type=template&id=abed6454&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es7.symbol.async-iterator.js
 var es7_symbol_async_iterator = __webpack_require__("ac4d");
@@ -2229,6 +2229,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       recorder: null,
       stream: null,
       videoUrl: null,
+      blob: null,
       isUploadReady: false,
       showErrorMessage: false,
       errorMessage: null
@@ -2257,15 +2258,15 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
           _this.recorder.ondataavailable = function (e) {
             chunks.push(e.data);
           };
-          _this.recorder.onstop = function (e) {
+          _this.recorder.onstop = function () {
             _this.$refs.camera.controls = !_this.$refs.camera.controls;
             _this.$refs.camera.autoplay = !_this.$refs.camera.autoplay;
             _this.$refs.camera.muted = !_this.$refs.camera.muted;
-            var blob = new Blob(chunks, {
+            _this.blob = new Blob(chunks, {
               type: "video/webm"
             });
             chunks = [];
-            _this.videoUrl = URL.createObjectURL(blob);
+            _this.videoUrl = URL.createObjectURL(_this.blob);
             _this.$refs.camera.src = _this.videoUrl;
           };
         }
@@ -2277,7 +2278,6 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
           _this.showErrorMessage = true;
           _this.errorMessage = message;
         }
-        console.log('Error message: ', message);
       });
     },
     takePhoto: function takePhoto() {
@@ -2288,7 +2288,11 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     },
     uploadFile: function uploadFile() {
       if (this.mode === 'video') {
-        this.$emit("uploadFile", this.videoUrl);
+        this.$emit("uploadFile", {
+          "url": this.videoUrl,
+          "mimeType": "video/webm",
+          "blob": this.blob
+        });
       } else {
         this.$emit("uploadFile", this.$refs.canvas.toDataURL());
       }
@@ -2343,8 +2347,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
 var DesktopComponent_component = normalizeComponent(
   components_DesktopComponentvue_type_script_lang_js_,
-  DesktopComponentvue_type_template_id_492880d9_render,
-  DesktopComponentvue_type_template_id_492880d9_staticRenderFns,
+  DesktopComponentvue_type_template_id_abed6454_render,
+  DesktopComponentvue_type_template_id_abed6454_staticRenderFns,
   false,
   null,
   null,
