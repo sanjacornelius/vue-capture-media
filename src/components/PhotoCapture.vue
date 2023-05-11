@@ -2,7 +2,23 @@
   <div>
     <div class="media-container">
       <mobile-component  v-if="isMobile" mode="photo" @uploadFile="uploadFile"></mobile-component>
-      <desktop-component v-if="!isMobile" mode="photo" :captureBtnIcon="captureBtnIcon" :uploadBtnIcon="uploadBtnIcon" @uploadFile="uploadFile"></desktop-component>
+      <desktop-component 
+        v-if="!isMobile" 
+        mode="photo" 
+        :cameraWidth="cameraWidth"
+        :cameraHeight="cameraHeight"
+        :playBtnIcon="playBtnIcon" 
+        :captureBtnIcon="captureBtnIcon" 
+        :recordBtnIcon="recordBtnIcon" 
+        :stopBtnIcon="stopBtnIcon" 
+        :retakeBtnIcon="retakeBtnIcon" 
+        :uploadBtnIcon="uploadBtnIcon"
+        :photoText="photoText"
+        :stopText="stopText"
+        :retakeText="retakeText"
+        :uploadText="uploadText"
+        @uploadFile="uploadFile">
+      </desktop-component>
     </div>
   </div>
 </template>
@@ -18,7 +34,19 @@ export default {
     DesktopComponent,
   },
   mixins: [MobileDetection],
-  props: ['value', 'captureBtnIcon', 'uploadBtnIcon'],
+  props: [
+    'cameraWidth',
+    'cameraHeight',
+    'captureBtnIcon', 
+    'uploadBtnIcon', 
+    'stopBtnIcon', 
+    'recordBtnIcon', 
+    'retakeBtnIcon',
+    'photoText',
+    'stopText',
+    'retakeText',
+    'uploadText'
+  ],
   data() {
     return {
     };

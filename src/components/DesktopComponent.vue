@@ -1,33 +1,64 @@
 <template>
   <div>
     <Loader v-show="isLoading"></Loader>
-      <div v-show="!isLoading">
-          <div class="capture" :class="{'flash' : isShotPhoto}">
-              <div class="camera-shutter" :class="{'flash' : isShotPhoto}"></div>
-              <video v-show="!isPhotoTaken" ref="camera" class="camera" :width="450" :height="337.5" :class="mode" muted autoplay />
-              <canvas v-show="mode === 'photo' && isPhotoTaken" ref="canvas" :width="450" :height="337.5" class="preview" />
-          </div>
-          <div class="controls">
-            <button
-              v-if="mode === 'photo'"
-              class="btn btn-photo "
-              @click.prevent="takePhoto"
-              alt="Capture Photo">
-              <i :class="captureBtnIcon"></i> Photo
-            </button>
-            <button v-if="mode === 'video' && !isRecording && !isUploadReady" @click="recordVideo" class="btn btn-record flex-center"><i :class="recordBtnIcon"></i> Rec</button>
-            <button v-if="mode === 'video' && isRecording" @click="stopVideo" class="btn btn-stop"><i :class="stopBtnIcon"></i> Stop</button>
-            <button v-if="mode === 'video' && !isRecording && isUploadReady" @click="resetVideo" class="btn btn-retake"><i :class="retakeBtnIcon"></i> Retake</button>
-            <button
-              v-if="isUploadReady"
-              class="btn btn-upload"
-              @click.prevent="uploadFile"
-              alt="Upload">
-              <i :class="uploadBtnIcon"></i> Upload
-            </button>
-
-          </div>
+    <div v-show="!isLoading">
+      <div class="capture">
+        <!-- video element for camera feed -->
+          <video 
+            ref="camera"
+            class="camera"
+            :class="mode"
+            muted 
+            autoplay
+            v-show="!isPhotoTaken"     
+            :width="`${cameraWidth}px`" 
+            :height="`${cameraHeight}px`"
+          ></video>
+          <!-- canvas element for photo preview -->
+          <canvas 
+            ref="canvas"
+            class="preview"
+            v-show="mode === 'photo' && isPhotoTaken"   
+            :width="`${cameraWidth}px`" 
+            :height="`${cameraHeight}px`"
+          ></canvas>
       </div>
+
+      <div class="controls">
+        <button
+          v-if="mode === 'photo'"
+          @click.prevent="takePhoto"
+          class="btn btn-photo">
+          <i v-if="captureBtnIcon" :class="captureBtnIcon"></i> {{ photoText }}
+        </button>
+        <button 
+          v-if="mode === 'video' && !isRecording && !isUploadReady" 
+          @click="recordVideo" 
+          class="btn btn-record flex-center">
+          <i v-if="recordBtnIcon" :class="recordBtnIcon"></i> {{ recordText }}
+        </button>
+        <button 
+          v-if="mode === 'video' && isRecording" 
+          @click="stopVideo" 
+          class="btn btn-stop">
+          <i v-if="stopBtnIcon" :class="stopBtnIcon"></i> {{ stopText }}
+        </button>
+        <button 
+          v-if="mode === 'video' && !isRecording && isUploadReady" 
+          @click="resetVideo" 
+          class="btn btn-retake">
+          <i v-if="retakeBtnIcon" :class="retakeBtnIcon"></i> {{ retakeText }}
+        </button>
+        <!-- upload photo or video -->
+        <button
+          v-if="isUploadReady"
+          class="btn btn-upload"
+          @click.prevent="uploadFile"
+          alt="Upload">
+          <i v-if="uploadBtnIcon" :class="uploadBtnIcon"></i> {{ uploadText }}
+        </button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -40,12 +71,28 @@ export default {
   components:{
     Loader,
   },
-  props: ['captureBtnIcon', 'mode', 'uploadBtnIcon', 'stopBtnIcon', 'recordBtnIcon', 'retakeBtnIcon'],
+  props: [
+    // mode can be 'video' or 'photo'
+    'mode',
+    // dimensions for camera feed and photo preview
+    'cameraWidth',
+    'cameraHeight',
+    // icons for buttons
+    'captureBtnIcon', 
+    'uploadBtnIcon', 
+    'stopBtnIcon', 
+    'recordBtnIcon', 
+    'retakeBtnIcon',
+    // text for buttons
+    'photoText',
+    'stopText',
+    'retakeText',
+    'uploadText',
+  ],
   data() {
     return {
       isLoading: false,
       isPhotoTaken: false,
-      isShotPhoto: false,
       isRecording: false,
       recorder: null,
       stream: null,
@@ -53,23 +100,21 @@ export default {
       isUploadReady: false,
     };
   },
-  
   mounted() {
-    this.createCameraElement();  
+    this.setupCamera();  
   },
   methods: {
-     createCameraElement() {
+    setupCamera() {
       this.isLoading = true;
       navigator.mediaDevices
-      .getUserMedia({audio: true,
-				video: true})
+      .getUserMedia({
+        audio: true,
+				video: true
+      })
       .then(stream => {
-        this.isLoading = false;
         this.$refs.camera.srcObject = stream;
         if (this.mode === 'video') {
           let chunks = [];
-          this.$refs.camera.srcObject = stream;
-
           this.stream = stream;
           const options = {
             mimeType: "video/webm",
@@ -91,6 +136,7 @@ export default {
             this.$refs.camera.src = this.videoUrl;
           };
         }
+        this.isLoading = false;
       })
       .catch(error => {
         setTimeout(() => {
@@ -100,20 +146,10 @@ export default {
       });
     },
     takePhoto() {
-      if(!this.isPhotoTaken) {
-        this.isShotPhoto = true;
-
-        const FLASH_TIMEOUT = 50;
-
-        setTimeout(() => {
-          this.isShotPhoto = false;
-        }, FLASH_TIMEOUT);
-      }
-      
       this.isPhotoTaken = !this.isPhotoTaken;
       
       const context = this.$refs.canvas.getContext('2d');
-      context.drawImage(this.$refs.camera, 0, 0, 450, 337.5);
+      context.drawImage(this.$refs.camera, 0, 0, this.cameraWidth, this.cameraHeight);
       this.isUploadReady = true;
     },
     uploadFile() {
@@ -143,8 +179,7 @@ export default {
       this.$refs.camera.muted = !this.$refs.camera.muted;
       this.isUploadReady = false;
       this.isRecording = false;
-      this.createCameraElement();
-      
+      this.setupCamera();
     }
   },
   destroyed() {

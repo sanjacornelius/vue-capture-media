@@ -4,12 +4,18 @@
       <desktop-component 
         v-if="!isMobile" 
         mode="video" 
+        :cameraWidth="cameraWidth"
+        :cameraHeight="cameraHeight"
         :playBtnIcon="playBtnIcon" 
         :captureBtnIcon="captureBtnIcon" 
         :recordBtnIcon="recordBtnIcon" 
         :stopBtnIcon="stopBtnIcon" 
         :retakeBtnIcon="retakeBtnIcon" 
         :uploadBtnIcon="uploadBtnIcon"
+        :photoText="photoText"
+        :stopText="stopText"
+        :retakeText="retakeText"
+        :uploadText="uploadText"
         @uploadFile="uploadFile">
       </desktop-component>
     </div>
@@ -22,7 +28,19 @@ import MobileDetection from '../mixins/MobileDetection';
 export default {
   name: "VideoCapture",
   mixins: [MobileDetection],
-  props: ['recordBtnIcon', 'captureBtnIcon', 'stopBtnIcon', 'playBtnIcon', 'retakeBtnIcon', 'uploadBtnIcon'],
+  props: [
+    'cameraWidth',
+    'cameraHeight',
+    'captureBtnIcon', 
+    'uploadBtnIcon', 
+    'stopBtnIcon', 
+    'recordBtnIcon', 
+    'retakeBtnIcon',
+    'photoText',
+    'stopText',
+    'retakeText',
+    'uploadText'
+  ],
   components: {
     MobileComponent,
     DesktopComponent,

@@ -1859,7 +1859,7 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"592292e1-vue-loader-template"}!./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/babel-loader/lib!./node_modules/vue-loader/lib/loaders/templateLoader.js??ref--6!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/PhotoCapture.vue?vue&type=template&id=3abfb437&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"592292e1-vue-loader-template"}!./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/babel-loader/lib!./node_modules/vue-loader/lib/loaders/templateLoader.js??ref--6!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/PhotoCapture.vue?vue&type=template&id=1047fe1e&
 var render = function render() {
   var _vm = this,
     _c = _vm._self._c;
@@ -1875,8 +1875,18 @@ var render = function render() {
   }) : _vm._e(), !_vm.isMobile ? _c('desktop-component', {
     attrs: {
       "mode": "photo",
+      "cameraWidth": _vm.cameraWidth,
+      "cameraHeight": _vm.cameraHeight,
+      "playBtnIcon": _vm.playBtnIcon,
       "captureBtnIcon": _vm.captureBtnIcon,
-      "uploadBtnIcon": _vm.uploadBtnIcon
+      "recordBtnIcon": _vm.recordBtnIcon,
+      "stopBtnIcon": _vm.stopBtnIcon,
+      "retakeBtnIcon": _vm.retakeBtnIcon,
+      "uploadBtnIcon": _vm.uploadBtnIcon,
+      "photoText": _vm.photoText,
+      "stopText": _vm.stopText,
+      "retakeText": _vm.retakeText,
+      "uploadText": _vm.uploadText
     },
     on: {
       "uploadFile": _vm.uploadFile
@@ -1885,7 +1895,7 @@ var render = function render() {
 };
 var staticRenderFns = [];
 
-// CONCATENATED MODULE: ./src/components/PhotoCapture.vue?vue&type=template&id=3abfb437&
+// CONCATENATED MODULE: ./src/components/PhotoCapture.vue?vue&type=template&id=1047fe1e&
 
 // CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"592292e1-vue-loader-template"}!./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/babel-loader/lib!./node_modules/vue-loader/lib/loaders/templateLoader.js??ref--6!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/MobileComponent.vue?vue&type=template&id=96c9f3ae&
 var MobileComponentvue_type_template_id_96c9f3ae_render = function render() {
@@ -2058,8 +2068,8 @@ var component = normalizeComponent(
 )
 
 /* harmony default export */ var MobileComponent = (component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"592292e1-vue-loader-template"}!./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/babel-loader/lib!./node_modules/vue-loader/lib/loaders/templateLoader.js??ref--6!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/DesktopComponent.vue?vue&type=template&id=74e2975a&
-var DesktopComponentvue_type_template_id_74e2975a_render = function render() {
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"592292e1-vue-loader-template"}!./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/babel-loader/lib!./node_modules/vue-loader/lib/loaders/templateLoader.js??ref--6!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/DesktopComponent.vue?vue&type=template&id=d2e6fd62&
+var DesktopComponentvue_type_template_id_d2e6fd62_render = function render() {
   var _vm = this,
     _c = _vm._self._c;
   return _c('div', [_c('Loader', {
@@ -2077,16 +2087,8 @@ var DesktopComponentvue_type_template_id_74e2975a_render = function render() {
       expression: "!isLoading"
     }]
   }, [_c('div', {
-    staticClass: "capture",
-    class: {
-      'flash': _vm.isShotPhoto
-    }
-  }, [_c('div', {
-    staticClass: "camera-shutter",
-    class: {
-      'flash': _vm.isShotPhoto
-    }
-  }), _c('video', {
+    staticClass: "capture"
+  }, [_c('video', {
     directives: [{
       name: "show",
       rawName: "v-show",
@@ -2097,10 +2099,10 @@ var DesktopComponentvue_type_template_id_74e2975a_render = function render() {
     staticClass: "camera",
     class: _vm.mode,
     attrs: {
-      "width": 450,
-      "height": 337.5,
       "muted": "",
-      "autoplay": ""
+      "autoplay": "",
+      "width": "".concat(_vm.cameraWidth, "px"),
+      "height": "".concat(_vm.cameraHeight, "px")
     },
     domProps: {
       "muted": true
@@ -2115,46 +2117,43 @@ var DesktopComponentvue_type_template_id_74e2975a_render = function render() {
     ref: "canvas",
     staticClass: "preview",
     attrs: {
-      "width": 450,
-      "height": 337.5
+      "width": "".concat(_vm.cameraWidth, "px"),
+      "height": "".concat(_vm.cameraHeight, "px")
     }
   })]), _c('div', {
     staticClass: "controls"
   }, [_vm.mode === 'photo' ? _c('button', {
     staticClass: "btn btn-photo",
-    attrs: {
-      "alt": "Capture Photo"
-    },
     on: {
       "click": function click($event) {
         $event.preventDefault();
         return _vm.takePhoto.apply(null, arguments);
       }
     }
-  }, [_c('i', {
+  }, [_vm.captureBtnIcon ? _c('i', {
     class: _vm.captureBtnIcon
-  }), _vm._v(" Photo\n          ")]) : _vm._e(), _vm.mode === 'video' && !_vm.isRecording && !_vm.isUploadReady ? _c('button', {
+  }) : _vm._e(), _vm._v(" " + _vm._s(_vm.photoText) + "\n      ")]) : _vm._e(), _vm.mode === 'video' && !_vm.isRecording && !_vm.isUploadReady ? _c('button', {
     staticClass: "btn btn-record flex-center",
     on: {
       "click": _vm.recordVideo
     }
-  }, [_c('i', {
+  }, [_vm.recordBtnIcon ? _c('i', {
     class: _vm.recordBtnIcon
-  }), _vm._v(" Rec")]) : _vm._e(), _vm.mode === 'video' && _vm.isRecording ? _c('button', {
+  }) : _vm._e(), _vm._v(" " + _vm._s(_vm.recordText) + "\n      ")]) : _vm._e(), _vm.mode === 'video' && _vm.isRecording ? _c('button', {
     staticClass: "btn btn-stop",
     on: {
       "click": _vm.stopVideo
     }
-  }, [_c('i', {
+  }, [_vm.stopBtnIcon ? _c('i', {
     class: _vm.stopBtnIcon
-  }), _vm._v(" Stop")]) : _vm._e(), _vm.mode === 'video' && !_vm.isRecording && _vm.isUploadReady ? _c('button', {
+  }) : _vm._e(), _vm._v(" " + _vm._s(_vm.stopText) + "\n      ")]) : _vm._e(), _vm.mode === 'video' && !_vm.isRecording && _vm.isUploadReady ? _c('button', {
     staticClass: "btn btn-retake",
     on: {
       "click": _vm.resetVideo
     }
-  }, [_c('i', {
+  }, [_vm.retakeBtnIcon ? _c('i', {
     class: _vm.retakeBtnIcon
-  }), _vm._v(" Retake")]) : _vm._e(), _vm.isUploadReady ? _c('button', {
+  }) : _vm._e(), _vm._v(" " + _vm._s(_vm.retakeText) + "\n      ")]) : _vm._e(), _vm.isUploadReady ? _c('button', {
     staticClass: "btn btn-upload",
     attrs: {
       "alt": "Upload"
@@ -2165,13 +2164,13 @@ var DesktopComponentvue_type_template_id_74e2975a_render = function render() {
         return _vm.uploadFile.apply(null, arguments);
       }
     }
-  }, [_c('i', {
+  }, [_vm.uploadBtnIcon ? _c('i', {
     class: _vm.uploadBtnIcon
-  }), _vm._v(" Upload\n          ")]) : _vm._e()])])], 1);
+  }) : _vm._e(), _vm._v(" " + _vm._s(_vm.uploadText) + "\n      ")]) : _vm._e()])])], 1);
 };
-var DesktopComponentvue_type_template_id_74e2975a_staticRenderFns = [];
+var DesktopComponentvue_type_template_id_d2e6fd62_staticRenderFns = [];
 
-// CONCATENATED MODULE: ./src/components/DesktopComponent.vue?vue&type=template&id=74e2975a&
+// CONCATENATED MODULE: ./src/components/DesktopComponent.vue?vue&type=template&id=d2e6fd62&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es7.symbol.async-iterator.js
 var es7_symbol_async_iterator = __webpack_require__("ac4d");
@@ -2253,12 +2252,19 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
   components: {
     Loader: Loader
   },
-  props: ['captureBtnIcon', 'mode', 'uploadBtnIcon', 'stopBtnIcon', 'recordBtnIcon', 'retakeBtnIcon'],
+  props: [
+  // mode can be 'video' or 'photo'
+  'mode',
+  // dimensions for camera feed and photo preview
+  'cameraWidth', 'cameraHeight',
+  // icons for buttons
+  'captureBtnIcon', 'uploadBtnIcon', 'stopBtnIcon', 'recordBtnIcon', 'retakeBtnIcon',
+  // text for buttons
+  'photoText', 'stopText', 'retakeText', 'uploadText'],
   data: function data() {
     return {
       isLoading: false,
       isPhotoTaken: false,
-      isShotPhoto: false,
       isRecording: false,
       recorder: null,
       stream: null,
@@ -2267,21 +2273,19 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     };
   },
   mounted: function mounted() {
-    this.createCameraElement();
+    this.setupCamera();
   },
   methods: {
-    createCameraElement: function createCameraElement() {
+    setupCamera: function setupCamera() {
       var _this = this;
       this.isLoading = true;
       navigator.mediaDevices.getUserMedia({
         audio: true,
         video: true
       }).then(function (stream) {
-        _this.isLoading = false;
         _this.$refs.camera.srcObject = stream;
         if (_this.mode === 'video') {
           var chunks = [];
-          _this.$refs.camera.srcObject = stream;
           _this.stream = stream;
           var options = {
             mimeType: "video/webm",
@@ -2303,6 +2307,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
             _this.$refs.camera.src = _this.videoUrl;
           };
         }
+        _this.isLoading = false;
       }).catch(function (error) {
         setTimeout(function () {
           _this.isLoading = false;
@@ -2310,17 +2315,9 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       });
     },
     takePhoto: function takePhoto() {
-      var _this2 = this;
-      if (!this.isPhotoTaken) {
-        this.isShotPhoto = true;
-        var FLASH_TIMEOUT = 50;
-        setTimeout(function () {
-          _this2.isShotPhoto = false;
-        }, FLASH_TIMEOUT);
-      }
       this.isPhotoTaken = !this.isPhotoTaken;
       var context = this.$refs.canvas.getContext('2d');
-      context.drawImage(this.$refs.camera, 0, 0, 450, 337.5);
+      context.drawImage(this.$refs.camera, 0, 0, this.cameraWidth, this.cameraHeight);
       this.isUploadReady = true;
     },
     uploadFile: function uploadFile() {
@@ -2359,7 +2356,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       this.$refs.camera.muted = !this.$refs.camera.muted;
       this.isUploadReady = false;
       this.isRecording = false;
-      this.createCameraElement();
+      this.setupCamera();
     }
   },
   destroyed: function destroyed() {
@@ -2380,8 +2377,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
 var DesktopComponent_component = normalizeComponent(
   components_DesktopComponentvue_type_script_lang_js_,
-  DesktopComponentvue_type_template_id_74e2975a_render,
-  DesktopComponentvue_type_template_id_74e2975a_staticRenderFns,
+  DesktopComponentvue_type_template_id_d2e6fd62_render,
+  DesktopComponentvue_type_template_id_d2e6fd62_staticRenderFns,
   false,
   null,
   null,
@@ -2418,7 +2415,7 @@ function _readOnlyError(name) {
     DesktopComponent: DesktopComponent
   },
   mixins: [MobileDetection],
-  props: ['value', 'captureBtnIcon', 'uploadBtnIcon'],
+  props: ['cameraWidth', 'cameraHeight', 'captureBtnIcon', 'uploadBtnIcon', 'stopBtnIcon', 'recordBtnIcon', 'retakeBtnIcon', 'photoText', 'stopText', 'retakeText', 'uploadText'],
   data: function data() {
     return {};
   },
@@ -2453,8 +2450,8 @@ var PhotoCapture_component = normalizeComponent(
 )
 
 /* harmony default export */ var PhotoCapture = (PhotoCapture_component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"592292e1-vue-loader-template"}!./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/babel-loader/lib!./node_modules/vue-loader/lib/loaders/templateLoader.js??ref--6!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/VideoCapture.vue?vue&type=template&id=14965294&
-var VideoCapturevue_type_template_id_14965294_render = function render() {
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"592292e1-vue-loader-template"}!./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/babel-loader/lib!./node_modules/vue-loader/lib/loaders/templateLoader.js??ref--6!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/VideoCapture.vue?vue&type=template&id=1c8fb426&
+var VideoCapturevue_type_template_id_1c8fb426_render = function render() {
   var _vm = this,
     _c = _vm._self._c;
   return _c('div', {
@@ -2469,21 +2466,27 @@ var VideoCapturevue_type_template_id_14965294_render = function render() {
   }) : _vm._e(), !_vm.isMobile ? _c('desktop-component', {
     attrs: {
       "mode": "video",
+      "cameraWidth": _vm.cameraWidth,
+      "cameraHeight": _vm.cameraHeight,
       "playBtnIcon": _vm.playBtnIcon,
       "captureBtnIcon": _vm.captureBtnIcon,
       "recordBtnIcon": _vm.recordBtnIcon,
       "stopBtnIcon": _vm.stopBtnIcon,
       "retakeBtnIcon": _vm.retakeBtnIcon,
-      "uploadBtnIcon": _vm.uploadBtnIcon
+      "uploadBtnIcon": _vm.uploadBtnIcon,
+      "photoText": _vm.photoText,
+      "stopText": _vm.stopText,
+      "retakeText": _vm.retakeText,
+      "uploadText": _vm.uploadText
     },
     on: {
       "uploadFile": _vm.uploadFile
     }
   }) : _vm._e()], 1);
 };
-var VideoCapturevue_type_template_id_14965294_staticRenderFns = [];
+var VideoCapturevue_type_template_id_1c8fb426_staticRenderFns = [];
 
-// CONCATENATED MODULE: ./src/components/VideoCapture.vue?vue&type=template&id=14965294&
+// CONCATENATED MODULE: ./src/components/VideoCapture.vue?vue&type=template&id=1c8fb426&
 
 // CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/VideoCapture.vue?vue&type=script&lang=js&
 
@@ -2492,7 +2495,7 @@ var VideoCapturevue_type_template_id_14965294_staticRenderFns = [];
 /* harmony default export */ var VideoCapturevue_type_script_lang_js_ = ({
   name: "VideoCapture",
   mixins: [MobileDetection],
-  props: ['recordBtnIcon', 'captureBtnIcon', 'stopBtnIcon', 'playBtnIcon', 'retakeBtnIcon', 'uploadBtnIcon'],
+  props: ['cameraWidth', 'cameraHeight', 'captureBtnIcon', 'uploadBtnIcon', 'stopBtnIcon', 'recordBtnIcon', 'retakeBtnIcon', 'photoText', 'stopText', 'retakeText', 'uploadText'],
   components: {
     MobileComponent: MobileComponent,
     DesktopComponent: DesktopComponent
@@ -2521,8 +2524,8 @@ var VideoCapturevue_type_template_id_14965294_staticRenderFns = [];
 
 var VideoCapture_component = normalizeComponent(
   components_VideoCapturevue_type_script_lang_js_,
-  VideoCapturevue_type_template_id_14965294_render,
-  VideoCapturevue_type_template_id_14965294_staticRenderFns,
+  VideoCapturevue_type_template_id_1c8fb426_render,
+  VideoCapturevue_type_template_id_1c8fb426_staticRenderFns,
   false,
   null,
   null,
