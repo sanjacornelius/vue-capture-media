@@ -1,7 +1,7 @@
 <template>
   <div>
     <Loader v-show="isLoading"></Loader>
-    <div v-show="!isLoading">
+    <div v-show="!isLoading && !showErrorMessage">
       <div class="capture">
         <!-- video element for camera feed -->
           <video 
@@ -59,6 +59,9 @@
         </button>
       </div>
     </div>
+    <div v-if="showErrorMessage">
+      {{ errorMessage }}
+    </div>
   </div>
 </template>
 
@@ -98,6 +101,8 @@ export default {
       stream: null,
       videoUrl: null,
       isUploadReady: false,
+      showErrorMessage: false,
+      errorMessage: null,
     };
   },
   mounted() {
@@ -139,10 +144,13 @@ export default {
         this.isLoading = false;
       })
       .catch(error => {
-        setTimeout(() => {
-          this.isLoading = false;
-        }, 1000);
-        
+        this.isLoading = false;
+        const message = error.message;
+        if (message === 'Requested device not found' ) {
+          this.showErrorMessage = true;
+          this.errorMessage = message;
+        }
+        console.log('Error message: ', message);
       });
     },
     takePhoto() {
