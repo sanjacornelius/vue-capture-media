@@ -15,7 +15,16 @@ export default {
   props: ['mode'],
   methods: {
     handleFileInput(event) {
-      this.$emit('uploadFile', event);
+      const files = event.target.files;
+      const file = files[0];
+      const reader = new FileReader();
+      const that = this;
+      reader.onload = function(event) {
+        const base64url = event.target.result;
+        // send the base64url to the server
+        that.$emit('uploadFile', base64url);
+      };
+      reader.readAsDataURL(file);
     }
   }
 };
