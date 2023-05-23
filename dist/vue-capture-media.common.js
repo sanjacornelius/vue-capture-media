@@ -786,6 +786,22 @@ module.exports = function (exec, skipClosing) {
 
 /***/ }),
 
+/***/ "5dbc":
+/***/ (function(module, exports, __webpack_require__) {
+
+var isObject = __webpack_require__("d3f4");
+var setPrototypeOf = __webpack_require__("8b97").set;
+module.exports = function (that, target, C) {
+  var S = target.constructor;
+  var P;
+  if (S !== C && typeof S == 'function' && (P = S.prototype) !== C.prototype && isObject(P) && setPrototypeOf) {
+    setPrototypeOf(that, P);
+  } return that;
+};
+
+
+/***/ }),
+
 /***/ "5df3":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1370,6 +1386,38 @@ setToStringTag(global.JSON, 'JSON', true);
 
 /***/ }),
 
+/***/ "8b97":
+/***/ (function(module, exports, __webpack_require__) {
+
+// Works with __proto__ only. Old v8 can't work with null proto objects.
+/* eslint-disable no-proto */
+var isObject = __webpack_require__("d3f4");
+var anObject = __webpack_require__("cb7c");
+var check = function (O, proto) {
+  anObject(O);
+  if (!isObject(proto) && proto !== null) throw TypeError(proto + ": can't set as prototype!");
+};
+module.exports = {
+  set: Object.setPrototypeOf || ('__proto__' in {} ? // eslint-disable-line
+    function (test, buggy, set) {
+      try {
+        set = __webpack_require__("9b43")(Function.call, __webpack_require__("11e9").f(Object.prototype, '__proto__').set, 2);
+        set(test, []);
+        buggy = !(test instanceof Array);
+      } catch (e) { buggy = true; }
+      return function setPrototypeOf(O, proto) {
+        check(O, proto);
+        if (buggy) O.__proto__ = proto;
+        else set(O, proto);
+        return O;
+      };
+    }({}, false) : undefined),
+  check: check
+};
+
+
+/***/ }),
+
 /***/ "9093":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1464,6 +1512,43 @@ module.exports = !__webpack_require__("79e5")(function () {
 /***/ (function(module, exports, __webpack_require__) {
 
 // extracted by mini-css-extract-plugin
+
+/***/ }),
+
+/***/ "aa77":
+/***/ (function(module, exports, __webpack_require__) {
+
+var $export = __webpack_require__("5ca1");
+var defined = __webpack_require__("be13");
+var fails = __webpack_require__("79e5");
+var spaces = __webpack_require__("fdef");
+var space = '[' + spaces + ']';
+var non = '\u200b\u0085';
+var ltrim = RegExp('^' + space + space + '*');
+var rtrim = RegExp(space + space + '*$');
+
+var exporter = function (KEY, exec, ALIAS) {
+  var exp = {};
+  var FORCE = fails(function () {
+    return !!spaces[KEY]() || non[KEY]() != non;
+  });
+  var fn = exp[KEY] = FORCE ? exec(trim) : spaces[KEY];
+  if (ALIAS) exp[ALIAS] = fn;
+  $export($export.P + $export.F * FORCE, 'String', exp);
+};
+
+// 1 -> String#trimLeft
+// 2 -> String#trimRight
+// 3 -> String#trim
+var trim = exporter.trim = function (string, TYPE) {
+  string = String(defined(string));
+  if (TYPE & 1) string = string.replace(ltrim, '');
+  if (TYPE & 2) string = string.replace(rtrim, '');
+  return string;
+};
+
+module.exports = exporter;
+
 
 /***/ }),
 
@@ -1578,6 +1663,83 @@ module.exports = function (IS_INCLUDES) {
     } return !IS_INCLUDES && -1;
   };
 };
+
+
+/***/ }),
+
+/***/ "c5f6":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var global = __webpack_require__("7726");
+var has = __webpack_require__("69a8");
+var cof = __webpack_require__("2d95");
+var inheritIfRequired = __webpack_require__("5dbc");
+var toPrimitive = __webpack_require__("6a99");
+var fails = __webpack_require__("79e5");
+var gOPN = __webpack_require__("9093").f;
+var gOPD = __webpack_require__("11e9").f;
+var dP = __webpack_require__("86cc").f;
+var $trim = __webpack_require__("aa77").trim;
+var NUMBER = 'Number';
+var $Number = global[NUMBER];
+var Base = $Number;
+var proto = $Number.prototype;
+// Opera ~12 has broken Object#toString
+var BROKEN_COF = cof(__webpack_require__("2aeb")(proto)) == NUMBER;
+var TRIM = 'trim' in String.prototype;
+
+// 7.1.3 ToNumber(argument)
+var toNumber = function (argument) {
+  var it = toPrimitive(argument, false);
+  if (typeof it == 'string' && it.length > 2) {
+    it = TRIM ? it.trim() : $trim(it, 3);
+    var first = it.charCodeAt(0);
+    var third, radix, maxCode;
+    if (first === 43 || first === 45) {
+      third = it.charCodeAt(2);
+      if (third === 88 || third === 120) return NaN; // Number('+0x1') should be NaN, old V8 fix
+    } else if (first === 48) {
+      switch (it.charCodeAt(1)) {
+        case 66: case 98: radix = 2; maxCode = 49; break; // fast equal /^0b[01]+$/i
+        case 79: case 111: radix = 8; maxCode = 55; break; // fast equal /^0o[0-7]+$/i
+        default: return +it;
+      }
+      for (var digits = it.slice(2), i = 0, l = digits.length, code; i < l; i++) {
+        code = digits.charCodeAt(i);
+        // parseInt parses a string to a first unavailable symbol
+        // but ToNumber should return NaN if a string contains unavailable symbols
+        if (code < 48 || code > maxCode) return NaN;
+      } return parseInt(digits, radix);
+    }
+  } return +it;
+};
+
+if (!$Number(' 0o1') || !$Number('0b1') || $Number('+0x1')) {
+  $Number = function Number(value) {
+    var it = arguments.length < 1 ? 0 : value;
+    var that = this;
+    return that instanceof $Number
+      // check on 1..constructor(foo) case
+      && (BROKEN_COF ? fails(function () { proto.valueOf.call(that); }) : cof(that) != NUMBER)
+        ? inheritIfRequired(new Base(toNumber(it)), that, $Number) : toNumber(it);
+  };
+  for (var keys = __webpack_require__("9e1e") ? gOPN(Base) : (
+    // ES3:
+    'MAX_VALUE,MIN_VALUE,NaN,NEGATIVE_INFINITY,POSITIVE_INFINITY,' +
+    // ES6 (in case, if modules with ES6 Number statics required before):
+    'EPSILON,isFinite,isInteger,isNaN,isSafeInteger,MAX_SAFE_INTEGER,' +
+    'MIN_SAFE_INTEGER,parseFloat,parseInt,isInteger'
+  ).split(','), j = 0, key; keys.length > j; j++) {
+    if (has(Base, key = keys[j]) && !has($Number, key)) {
+      dP($Number, key, gOPD(Base, key));
+    }
+  }
+  $Number.prototype = proto;
+  proto.constructor = $Number;
+  __webpack_require__("2aba")(global, NUMBER, $Number);
+}
 
 
 /***/ }),
@@ -1850,7 +2012,7 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"d7db6156-vue-loader-template"}!./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/babel-loader/lib!./node_modules/vue-loader/lib/loaders/templateLoader.js??ref--6!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/PhotoCapture.vue?vue&type=template&id=5e1590bc&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"f2903eac-vue-loader-template"}!./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/babel-loader/lib!./node_modules/vue-loader/lib/loaders/templateLoader.js??ref--6!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/PhotoCapture.vue?vue&type=template&id=ae885914&
 var render = function render() {
   var _vm = this,
     _c = _vm._self._c;
@@ -1868,9 +2030,12 @@ var render = function render() {
 };
 var staticRenderFns = [];
 
-// CONCATENATED MODULE: ./src/components/PhotoCapture.vue?vue&type=template&id=5e1590bc&
+// CONCATENATED MODULE: ./src/components/PhotoCapture.vue?vue&type=template&id=ae885914&
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"d7db6156-vue-loader-template"}!./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/babel-loader/lib!./node_modules/vue-loader/lib/loaders/templateLoader.js??ref--6!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/MobileComponent.vue?vue&type=template&id=13f4531c&
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.number.constructor.js
+var es6_number_constructor = __webpack_require__("c5f6");
+
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"f2903eac-vue-loader-template"}!./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/babel-loader/lib!./node_modules/vue-loader/lib/loaders/templateLoader.js??ref--6!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/MobileComponent.vue?vue&type=template&id=13f4531c&
 var MobileComponentvue_type_template_id_13f4531c_render = function render() {
   var _vm = this,
     _c = _vm._self._c;
@@ -2037,8 +2202,8 @@ var component = normalizeComponent(
 )
 
 /* harmony default export */ var MobileComponent = (component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"d7db6156-vue-loader-template"}!./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/babel-loader/lib!./node_modules/vue-loader/lib/loaders/templateLoader.js??ref--6!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/DesktopComponent.vue?vue&type=template&id=0bb02380&
-var DesktopComponentvue_type_template_id_0bb02380_render = function render() {
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"f2903eac-vue-loader-template"}!./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/babel-loader/lib!./node_modules/vue-loader/lib/loaders/templateLoader.js??ref--6!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/DesktopComponent.vue?vue&type=template&id=2c2f8611&
+var DesktopComponentvue_type_template_id_2c2f8611_render = function render() {
   var _vm = this,
     _c = _vm._self._c;
   return _c('div', [_c('Loader', {
@@ -2056,7 +2221,11 @@ var DesktopComponentvue_type_template_id_0bb02380_render = function render() {
       expression: "!isLoading && !showErrorMessage"
     }]
   }, [_c('div', {
-    staticClass: "capture"
+    staticClass: "capture",
+    style: {
+      height: _vm.cameraHeight + 'px',
+      width: _vm.cameraWidth + 'px'
+    }
   }, [_c('video', {
     directives: [{
       name: "show",
@@ -2070,13 +2239,29 @@ var DesktopComponentvue_type_template_id_0bb02380_render = function render() {
     attrs: {
       "muted": "",
       "autoplay": "",
-      "width": "".concat(_vm.cameraWidth, "px"),
-      "height": "".concat(_vm.cameraHeight, "px")
+      "width": "100%",
+      "height": "100%"
     },
     domProps: {
       "muted": true
     }
-  }), _c('canvas', {
+  }), _c('div', {
+    staticClass: "overlay-container",
+    style: {
+      height: '100%',
+      width: '100%'
+    }
+  }, [_vm.overlayFile ? _c('img', {
+    ref: "overlayImg",
+    staticClass: "overlayImg"
+  }) : _vm._e(), _vm.overlayFile ? _c('canvas', {
+    ref: "overlay",
+    staticClass: "overlay",
+    attrs: {
+      "width": "".concat(_vm.cameraWidth, "px"),
+      "height": "".concat(_vm.cameraHeight, "px")
+    }
+  }) : _vm._e()]), _c('canvas', {
     directives: [{
       name: "show",
       rawName: "v-show",
@@ -2137,9 +2322,9 @@ var DesktopComponentvue_type_template_id_0bb02380_render = function render() {
     class: _vm.uploadBtnIcon
   }) : _vm._e(), _vm._v(" " + _vm._s(_vm.uploadText) + "\n      ")]) : _vm._e()])]), _vm.showErrorMessage ? _c('div', [_vm._v("\n    " + _vm._s(_vm.errorMessage) + "\n  ")]) : _vm._e()], 1);
 };
-var DesktopComponentvue_type_template_id_0bb02380_staticRenderFns = [];
+var DesktopComponentvue_type_template_id_2c2f8611_staticRenderFns = [];
 
-// CONCATENATED MODULE: ./src/components/DesktopComponent.vue?vue&type=template&id=0bb02380&
+// CONCATENATED MODULE: ./src/components/DesktopComponent.vue?vue&type=template&id=2c2f8611&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es7.symbol.async-iterator.js
 var es7_symbol_async_iterator = __webpack_require__("ac4d");
@@ -2162,7 +2347,7 @@ var es6_regexp_to_string = __webpack_require__("6b54");
 // EXTERNAL MODULE: ./node_modules/core-js/modules/web.dom.iterable.js
 var web_dom_iterable = __webpack_require__("ac6a");
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"d7db6156-vue-loader-template"}!./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/babel-loader/lib!./node_modules/vue-loader/lib/loaders/templateLoader.js??ref--6!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Loader.vue?vue&type=template&id=658a512f&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"f2903eac-vue-loader-template"}!./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/babel-loader/lib!./node_modules/vue-loader/lib/loaders/templateLoader.js??ref--6!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Loader.vue?vue&type=template&id=658a512f&
 var Loadervue_type_template_id_658a512f_render = function render() {
   var _vm = this,
     _c = _vm._self._c;
@@ -2221,15 +2406,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
   components: {
     Loader: Loader
   },
-  props: [
-  // mode can be 'video' or 'photo'
-  'mode',
-  // dimensions for camera feed and photo preview
-  'cameraWidth', 'cameraHeight',
-  // icons for buttons
-  'captureBtnIcon', 'uploadBtnIcon', 'stopBtnIcon', 'recordBtnIcon', 'retakeBtnIcon',
-  // text for buttons
-  'photoText', 'stopText', 'retakeText', 'uploadText'],
+  props: ['mode', 'cameraWidth', 'cameraHeight', 'overlayFile', 'captureBtnIcon', 'uploadBtnIcon', 'stopBtnIcon', 'recordBtnIcon', 'retakeBtnIcon', 'photoText', 'stopText', 'retakeText', 'uploadText'],
   data: function data() {
     return {
       isLoading: false,
@@ -2280,6 +2457,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
           };
         }
         _this.isLoading = false;
+        _this.setupOverlay();
       }).catch(function (error) {
         _this.isLoading = false;
         var message = error.message;
@@ -2336,6 +2514,11 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       this.isUploadReady = false;
       this.isRecording = false;
       this.setupCamera();
+    },
+    setupOverlay: function setupOverlay() {
+      var context = this.$refs.overlay.getContext('2d');
+      this.$refs.overlayImg.src = this.overlayFile;
+      context.drawImage(this.$refs.overlay, 0, 0, this.cameraWidth, this.cameraHeight);
     }
   },
   destroyed: function destroyed() {
@@ -2358,8 +2541,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
 var DesktopComponent_component = normalizeComponent(
   components_DesktopComponentvue_type_script_lang_js_,
-  DesktopComponentvue_type_template_id_0bb02380_render,
-  DesktopComponentvue_type_template_id_0bb02380_staticRenderFns,
+  DesktopComponentvue_type_template_id_2c2f8611_render,
+  DesktopComponentvue_type_template_id_2c2f8611_staticRenderFns,
   false,
   null,
   null,
@@ -2381,10 +2564,24 @@ var DesktopComponent_component = normalizeComponent(
 
 
 
+
 /* harmony default export */ var PhotoCapturevue_type_script_lang_js_ = ({
   name: "VideoCapture",
   mixins: [MobileDetection],
-  props: ['cameraWidth', 'cameraHeight', 'captureBtnIcon', 'uploadBtnIcon', 'stopBtnIcon', 'recordBtnIcon', 'retakeBtnIcon', 'photoText', 'stopText', 'retakeText', 'uploadText'],
+  props: {
+    cameraWidth: Number,
+    cameraHeight: Number,
+    overlayFile: String,
+    captureBtnIcon: String,
+    uploadBtnIcon: String,
+    stopBtnIcon: String,
+    recordBtnIcon: String,
+    retakeBtnIcon: String,
+    photoText: String,
+    stopText: String,
+    retakeText: String,
+    uploadText: String
+  },
   components: {
     MobileComponent: MobileComponent,
     DesktopComponent: DesktopComponent
@@ -2399,6 +2596,7 @@ var DesktopComponent_component = normalizeComponent(
       return this.isMobile ? {} : {
         cameraWidth: this.cameraWidth,
         cameraHeight: this.cameraHeight,
+        overlayFile: this.overlayFile,
         playBtnIcon: this.playBtnIcon,
         captureBtnIcon: this.captureBtnIcon,
         recordBtnIcon: this.recordBtnIcon,
@@ -2441,8 +2639,8 @@ var PhotoCapture_component = normalizeComponent(
 )
 
 /* harmony default export */ var PhotoCapture = (PhotoCapture_component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"d7db6156-vue-loader-template"}!./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/babel-loader/lib!./node_modules/vue-loader/lib/loaders/templateLoader.js??ref--6!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/VideoCapture.vue?vue&type=template&id=f676afbc&
-var VideoCapturevue_type_template_id_f676afbc_render = function render() {
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"f2903eac-vue-loader-template"}!./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/babel-loader/lib!./node_modules/vue-loader/lib/loaders/templateLoader.js??ref--6!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/VideoCapture.vue?vue&type=template&id=445c8246&
+var VideoCapturevue_type_template_id_445c8246_render = function render() {
   var _vm = this,
     _c = _vm._self._c;
   return _c('div', {
@@ -2457,18 +2655,32 @@ var VideoCapturevue_type_template_id_f676afbc_render = function render() {
     }
   }, 'component', _vm.captureComponentProps, false))], 1);
 };
-var VideoCapturevue_type_template_id_f676afbc_staticRenderFns = [];
+var VideoCapturevue_type_template_id_445c8246_staticRenderFns = [];
 
-// CONCATENATED MODULE: ./src/components/VideoCapture.vue?vue&type=template&id=f676afbc&
+// CONCATENATED MODULE: ./src/components/VideoCapture.vue?vue&type=template&id=445c8246&
 
 // CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/VideoCapture.vue?vue&type=script&lang=js&
+
 
 
 
 /* harmony default export */ var VideoCapturevue_type_script_lang_js_ = ({
   name: "VideoCapture",
   mixins: [MobileDetection],
-  props: ['cameraWidth', 'cameraHeight', 'captureBtnIcon', 'uploadBtnIcon', 'stopBtnIcon', 'recordBtnIcon', 'retakeBtnIcon', 'photoText', 'stopText', 'retakeText', 'uploadText'],
+  props: {
+    cameraWidth: Number,
+    cameraHeight: Number,
+    captureBtnIcon: String,
+    overlayFile: String,
+    uploadBtnIcon: String,
+    stopBtnIcon: String,
+    recordBtnIcon: String,
+    retakeBtnIcon: String,
+    photoText: String,
+    stopText: String,
+    retakeText: String,
+    uploadText: String
+  },
   components: {
     MobileComponent: MobileComponent,
     DesktopComponent: DesktopComponent
@@ -2483,6 +2695,7 @@ var VideoCapturevue_type_template_id_f676afbc_staticRenderFns = [];
       return this.isMobile ? {} : {
         cameraWidth: this.cameraWidth,
         cameraHeight: this.cameraHeight,
+        overlayFile: this.overlayFile,
         playBtnIcon: this.playBtnIcon,
         captureBtnIcon: this.captureBtnIcon,
         recordBtnIcon: this.recordBtnIcon,
@@ -2515,8 +2728,8 @@ var VideoCapturevue_type_template_id_f676afbc_staticRenderFns = [];
 
 var VideoCapture_component = normalizeComponent(
   components_VideoCapturevue_type_script_lang_js_,
-  VideoCapturevue_type_template_id_f676afbc_render,
-  VideoCapturevue_type_template_id_f676afbc_staticRenderFns,
+  VideoCapturevue_type_template_id_445c8246_render,
+  VideoCapturevue_type_template_id_445c8246_staticRenderFns,
   false,
   null,
   null,
@@ -2532,6 +2745,15 @@ var VideoCapture_component = normalizeComponent(
 // CONCATENATED MODULE: ./node_modules/@vue/cli-service/lib/commands/build/entry-lib-no-default.js
 
 
+
+
+/***/ }),
+
+/***/ "fdef":
+/***/ (function(module, exports) {
+
+module.exports = '\x09\x0A\x0B\x0C\x0D\x20\xA0\u1680\u180E\u2000\u2001\u2002\u2003' +
+  '\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u202F\u205F\u3000\u2028\u2029\uFEFF';
 
 
 /***/ })

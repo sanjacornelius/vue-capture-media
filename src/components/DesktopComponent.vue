@@ -2,23 +2,34 @@
   <div>
     <Loader v-show="isLoading"></Loader>
     <div v-show="!isLoading && !showErrorMessage">
-      <div class="capture">
+      <div class="capture" :style="{ height: cameraHeight + 'px', width: cameraWidth + 'px' }">
         <!-- video element for camera feed -->
           <video 
+            v-show="!isPhotoTaken" 
             ref="camera"
             class="camera"
             :class="mode"
             muted 
-            autoplay
-            v-show="!isPhotoTaken"     
-            :width="`${cameraWidth}px`" 
-            :height="`${cameraHeight}px`"
+            autoplay   
+            width="100%" 
+            height="100%"
           ></video>
+          <!-- canvas element for overlay -->
+          <div class="overlay-container"  :style="{height: '100%', width: '100%'}">
+            <img ref="overlayImg" v-if="overlayFile" class="overlayImg"/>
+            <canvas
+              v-if="overlayFile"
+              ref="overlay" 
+              class="overlay"  
+              :width="`${cameraWidth}px`" 
+              :height="`${cameraHeight}px`"
+            ></canvas>
+          </div>
           <!-- canvas element for photo preview -->
-          <canvas 
+          <canvas
+            v-show="mode === 'photo' && isPhotoTaken"   
             ref="canvas"
             class="preview"
-            v-show="mode === 'photo' && isPhotoTaken"   
             :width="`${cameraWidth}px`" 
             :height="`${cameraHeight}px`"
           ></canvas>
@@ -75,18 +86,15 @@ export default {
     Loader,
   },
   props: [
-    // mode can be 'video' or 'photo'
     'mode',
-    // dimensions for camera feed and photo preview
     'cameraWidth',
     'cameraHeight',
-    // icons for buttons
+    'overlayFile',    
     'captureBtnIcon', 
     'uploadBtnIcon', 
     'stopBtnIcon', 
     'recordBtnIcon', 
     'retakeBtnIcon',
-    // text for buttons
     'photoText',
     'stopText',
     'retakeText',
@@ -107,7 +115,7 @@ export default {
     };
   },
   mounted() {
-    this.setupCamera();  
+    this.setupCamera();
   },
   methods: {
     setupCamera() {
@@ -143,6 +151,7 @@ export default {
           };
         }
         this.isLoading = false;
+        this.setupOverlay();
       })
       .catch(error => {
         this.isLoading = false;
@@ -188,6 +197,11 @@ export default {
       this.isUploadReady = false;
       this.isRecording = false;
       this.setupCamera();
+    },
+    setupOverlay() {
+      const context = this.$refs.overlay.getContext('2d');
+      this.$refs.overlayImg.src = this.overlayFile;
+      context.drawImage(this.$refs.overlay, 0, 0, this.cameraWidth, this.cameraHeight);
     }
   },
   destroyed() {

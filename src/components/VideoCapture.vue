@@ -1,12 +1,12 @@
 <template>
-   <div class="media-container">
-      <!-- Use dynamic components to render either MobileComponent or DesktopComponent based on isMobile flag -->
-      <component :is="captureComponent" 
-        mode="video"
-        v-bind="captureComponentProps"
-        @uploadFile="uploadFile">
-      </component>
-    </div>
+  <div class="media-container">
+    <!-- Use dynamic components to render either MobileComponent or DesktopComponent based on isMobile flag -->
+    <component :is="captureComponent" 
+      mode="video"
+      v-bind="captureComponentProps"
+      @uploadFile="uploadFile">
+    </component>
+  </div>
 </template>
 
 <script>
@@ -16,19 +16,20 @@ import MobileDetection from '../mixins/MobileDetection';
 export default {
   name: "VideoCapture",
   mixins: [MobileDetection],
-  props: [
-    'cameraWidth',
-    'cameraHeight',
-    'captureBtnIcon', 
-    'uploadBtnIcon', 
-    'stopBtnIcon', 
-    'recordBtnIcon', 
-    'retakeBtnIcon',
-    'photoText',
-    'stopText',
-    'retakeText',
-    'uploadText'
-  ],
+  props: {
+    cameraWidth: Number,
+    cameraHeight: Number,
+    captureBtnIcon: String,
+    overlayFile: String,
+    uploadBtnIcon: String,
+    stopBtnIcon: String,
+    recordBtnIcon: String,
+    retakeBtnIcon: String,
+    photoText: String,
+    stopText: String,
+    retakeText: String,
+    uploadText: String
+  },
   components: {
     MobileComponent,
     DesktopComponent,
@@ -43,6 +44,7 @@ export default {
        return this.isMobile ? {} : {
           cameraWidth: this.cameraWidth,
           cameraHeight: this.cameraHeight,
+          overlayFile: this.overlayFile,
           playBtnIcon: this.playBtnIcon,
           captureBtnIcon: this.captureBtnIcon,
           recordBtnIcon: this.recordBtnIcon,
