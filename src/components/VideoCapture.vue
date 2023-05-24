@@ -19,8 +19,8 @@ export default {
   props: {
     cameraWidth: [Number, String],
     cameraHeight: [Number, String],
+    overlayFile: [Array, String],
     captureBtnIcon: String,
-    overlayFile: String,
     uploadBtnIcon: String,
     stopBtnIcon: String,
     recordBtnIcon: String,
