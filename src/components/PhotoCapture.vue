@@ -17,8 +17,8 @@ export default {
  name: "VideoCapture",
  mixins: [MobileDetection],
  props: {
-  cameraWidth: Number,
-  cameraHeight: Number,
+  cameraWidth: [Number, String],
+  cameraHeight: [Number, String],
   overlayFile: String,
   captureBtnIcon: String,
   uploadBtnIcon: String,

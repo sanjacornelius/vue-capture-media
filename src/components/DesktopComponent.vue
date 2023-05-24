@@ -15,8 +15,8 @@
             height="100%"
           ></video>
           <!-- canvas element for overlay -->
-          <div class="overlay-container"  :style="{height: '100%', width: '100%'}">
-            <img ref="overlayImg" v-if="overlayFile" class="overlayImg"/>
+          <div v-if="overlayFile.length > 0" class="overlay-container"  :style="{height: '100%', width: '100%'}">
+            <img ref="overlayImg" class="overlayImg"/>
             <canvas
               v-if="overlayFile"
               ref="overlay" 
@@ -114,9 +114,6 @@ export default {
       errorMessage: null,
     };
   },
-  mounted() {
-    this.setupCamera();
-  },
   methods: {
     setupCamera() {
       this.isLoading = true;
@@ -203,6 +200,9 @@ export default {
       this.$refs.overlayImg.src = this.overlayFile;
       context.drawImage(this.$refs.overlay, 0, 0, this.cameraWidth, this.cameraHeight);
     }
+  },
+  mounted() {
+    this.setupCamera();
   },
   destroyed() {
     if (this.stream) {
