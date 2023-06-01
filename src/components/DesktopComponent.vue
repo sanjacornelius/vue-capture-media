@@ -2,7 +2,7 @@
   <div>
     <Loader v-show="isLoading"></Loader>
     <div v-show="!isLoading && !showErrorMessage">
-      <div class="capture" :style="{ height: cameraHeight + 'px', width: cameraWidth + 'px' }">
+      <div class="capture" :style="{width: '450px', height: '337px'}">
         <!-- video element for camera feed -->
           <video 
             v-show="!isPhotoTaken" 
@@ -21,8 +21,8 @@
               v-if="overlayFile"
               ref="overlay" 
               class="overlay"  
-              :width="`${cameraWidth}px`" 
-              :height="`${cameraHeight}px`"
+              width="450px" 
+              height="337px"
             ></canvas>
           </div>
           <!-- canvas element for photo preview -->
@@ -30,8 +30,8 @@
             v-show="mode === 'photo' && isPhotoTaken"   
             ref="canvas"
             class="preview"
-            :width="`${cameraWidth}px`" 
-            :height="`${cameraHeight}px`"
+            width="450px" 
+            height="337px"
           ></canvas>
       </div>
 
@@ -120,7 +120,10 @@ export default {
       navigator.mediaDevices
       .getUserMedia({
         audio: true,
-				video: true
+				video: {
+          width: {max: 450},
+          height: {max: 337}
+        }
       })
       .then(stream => {
         this.$refs.camera.srcObject = stream;
@@ -148,7 +151,9 @@ export default {
           };
         }
         this.isLoading = false;
-        this.setupOverlay();
+        if (this.overlayFile.length > 0) {
+          this.setupOverlay();
+        }
       })
       .catch(error => {
         this.isLoading = false;
@@ -163,12 +168,21 @@ export default {
       this.isPhotoTaken = !this.isPhotoTaken;
       
       const context = this.$refs.canvas.getContext('2d');
-      context.drawImage(this.$refs.camera, 0, 0, this.cameraWidth, this.cameraHeight);
+      const width = this.$refs.canvas.width;
+      const height = this.$refs.canvas.height;
+      context.drawImage(this.$refs.camera, 0, 0, width, height);
       this.isUploadReady = true;
     },
     uploadFile() {
       if (this.mode === 'video') {
-        this.$emit("uploadFile", {"url": this.videoUrl, "mimeType": "video/webm", "blob": this.blob});  
+        this.$emit("uploadFile", {
+          "url": this.videoUrl, 
+          "mimeType": "video/webm", 
+          "blob": this.blob, 
+          "width": '450px', 
+          "height":"337px"
+        }); 
+        this.resetVideo(); 
       } else {
         this.$emit("uploadFile", this.$refs.canvas.toDataURL());
       }
