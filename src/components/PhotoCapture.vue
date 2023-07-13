@@ -42,8 +42,8 @@ export default {
    captureComponentProps() {
       // Dynamically set props based on isMobile flag
       return this.isMobile ? {} : {
-         cameraWidth: this.cameraWidth,
-         cameraHeight: this.cameraHeight,
+         cameraWidth: this.cameraWidth ? this.cameraWidth : '100%',
+         cameraHeight: this.cameraHeight ? this.cameraHeight : '100%',
          overlayFile: this.overlayFile,
          playBtnIcon: this.playBtnIcon,
          captureBtnIcon: this.captureBtnIcon,

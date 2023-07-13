@@ -2,7 +2,7 @@
   <div>
     <Loader v-show="isLoading"></Loader>
     <div v-show="!isLoading && !showErrorMessage">
-      <div class="capture" :style="{width: '450px', height: '337px'}">
+      <div class="capture">
         <!-- video element for camera feed -->
           <video 
             v-show="!isPhotoTaken" 
@@ -20,9 +20,9 @@
             <canvas
               v-if="overlayFile"
               ref="overlay" 
-              class="overlay"  
-              width="450px" 
-              height="337px"
+              class="overlay"
+              :width="cameraWidth"
+              :height="cameraHeight"
             ></canvas>
           </div>
           <!-- canvas element for photo preview -->
@@ -30,8 +30,8 @@
             v-show="mode === 'photo' && isPhotoTaken"   
             ref="canvas"
             class="preview"
-            width="450px" 
-            height="337px"
+            :width="cameraWidth"
+            :height="cameraHeight"
           ></canvas>
       </div>
 
@@ -212,7 +212,11 @@ export default {
     setupOverlay() {
       const context = this.$refs.overlay.getContext('2d');
       this.$refs.overlayImg.src = this.overlayFile;
-      context.drawImage(this.$refs.overlay, 0, 0, this.cameraWidth, this.cameraHeight);
+      const width = this.cameraWidth ? this.cameraWidth : context.canvas.width;
+      const height = this.cameraHeight ? this.cameraHeight : context.canvas.height;
+  //     ctx.canvas.width = imageObj.width;
+  // ctx.canvas.height = imageObj.height;
+      context.drawImage(this.$refs.overlay, 0, 0, width, height);
     }
   },
   mounted() {
