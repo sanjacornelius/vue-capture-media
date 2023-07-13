@@ -2202,8 +2202,8 @@ var component = normalizeComponent(
 )
 
 /* harmony default export */ var MobileComponent = (component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"3b483a92-vue-loader-template"}!./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/babel-loader/lib!./node_modules/vue-loader/lib/loaders/templateLoader.js??ref--6!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/DesktopComponent.vue?vue&type=template&id=887e63fa&
-var DesktopComponentvue_type_template_id_887e63fa_render = function render() {
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"3b483a92-vue-loader-template"}!./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/babel-loader/lib!./node_modules/vue-loader/lib/loaders/templateLoader.js??ref--6!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/DesktopComponent.vue?vue&type=template&id=1e243579&
+var DesktopComponentvue_type_template_id_1e243579_render = function render() {
   var _vm = this,
     _c = _vm._self._c;
   return _c('div', [_c('Loader', {
@@ -2318,9 +2318,9 @@ var DesktopComponentvue_type_template_id_887e63fa_render = function render() {
     class: _vm.uploadBtnIcon
   }) : _vm._e(), _vm._v(" " + _vm._s(_vm.uploadText) + "\n      ")]) : _vm._e()])]), _vm.showErrorMessage ? _c('div', [_vm._v("\n    " + _vm._s(_vm.errorMessage) + "\n  ")]) : _vm._e()], 1);
 };
-var DesktopComponentvue_type_template_id_887e63fa_staticRenderFns = [];
+var DesktopComponentvue_type_template_id_1e243579_staticRenderFns = [];
 
-// CONCATENATED MODULE: ./src/components/DesktopComponent.vue?vue&type=template&id=887e63fa&
+// CONCATENATED MODULE: ./src/components/DesktopComponent.vue?vue&type=template&id=1e243579&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es7.symbol.async-iterator.js
 var es7_symbol_async_iterator = __webpack_require__("ac4d");
@@ -2483,8 +2483,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
           "url": this.videoUrl,
           "mimeType": "video/webm",
           "blob": this.blob,
-          "width": '450px',
-          "height": "337px"
+          "width": '100%',
+          "height": "100%"
         });
         this.resetVideo();
       } else {
@@ -2527,8 +2527,6 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       this.$refs.overlayImg.src = this.overlayFile;
       var width = this.cameraWidth ? this.cameraWidth : context.canvas.width;
       var height = this.cameraHeight ? this.cameraHeight : context.canvas.height;
-      //     ctx.canvas.width = imageObj.width;
-      // ctx.canvas.height = imageObj.height;
       context.drawImage(this.$refs.overlay, 0, 0, width, height);
     }
   },
@@ -2555,8 +2553,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
 var DesktopComponent_component = normalizeComponent(
   components_DesktopComponentvue_type_script_lang_js_,
-  DesktopComponentvue_type_template_id_887e63fa_render,
-  DesktopComponentvue_type_template_id_887e63fa_staticRenderFns,
+  DesktopComponentvue_type_template_id_1e243579_render,
+  DesktopComponentvue_type_template_id_1e243579_staticRenderFns,
   false,
   null,
   null,

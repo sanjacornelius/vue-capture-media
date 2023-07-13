@@ -179,8 +179,8 @@ export default {
           "url": this.videoUrl, 
           "mimeType": "video/webm", 
           "blob": this.blob, 
-          "width": '450px', 
-          "height":"337px"
+          "width": '100%', 
+          "height":"100%"
         }); 
         this.resetVideo(); 
       } else {
@@ -214,8 +214,6 @@ export default {
       this.$refs.overlayImg.src = this.overlayFile;
       const width = this.cameraWidth ? this.cameraWidth : context.canvas.width;
       const height = this.cameraHeight ? this.cameraHeight : context.canvas.height;
-  //     ctx.canvas.width = imageObj.width;
-  // ctx.canvas.height = imageObj.height;
       context.drawImage(this.$refs.overlay, 0, 0, width, height);
     }
   },
