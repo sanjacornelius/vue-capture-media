@@ -108,8 +108,8 @@ export default {
       isUploadReady: false,
       showErrorMessage: false,
       errorMessage: null,
-      canvasWidth: 100,
-      canvasHeight: 100,
+      canvasWidth: '100%',
+      canvasHeight: '100%',
     };
   },
   methods: {
@@ -119,8 +119,8 @@ export default {
       .getUserMedia({
         audio: true,
 				video: {
-          width: {max: 450},
-          height: {max: 337}
+          width: {max: 2000},
+          height: {max: 2000}
         }
       })
       .then(stream => {
@@ -195,6 +195,7 @@ export default {
     },
     uploadFile() {
       if (this.mode === 'video') {
+        console.log('canvas width', this.canvasWidth, this.canvasHeight);
         this.$emit("uploadFile", {
           "url": this.videoUrl, 
           "mimeType": "video/webm", 
