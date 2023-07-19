@@ -16,13 +16,11 @@
           ></video>
           <!-- canvas element for overlay -->
           <div v-if="overlayFile.length > 0" class="overlay-container"  :style="{height: '100%', width: '100%'}">
-            <img ref="overlayImg" class="overlayImg"/>
+            <img ref="overlayImg" alt="overlay_img" class="overlayImg"/>
             <canvas
               v-if="overlayFile"
               ref="overlay" 
               class="overlay"
-              :width="cameraWidth"
-              :height="cameraHeight"
             ></canvas>
           </div>
           <!-- canvas element for photo preview -->
@@ -30,8 +28,6 @@
             v-show="mode === 'photo' && isPhotoTaken"   
             ref="canvas"
             class="preview"
-            :width="cameraWidth"
-            :height="cameraHeight"
           ></canvas>
       </div>
 
@@ -112,6 +108,8 @@ export default {
       isUploadReady: false,
       showErrorMessage: false,
       errorMessage: null,
+      canvasWidth: 100,
+      canvasHeight: 100,
     };
   },
   methods: {
@@ -165,12 +163,34 @@ export default {
       });
     },
     takePhoto() {
-      this.isPhotoTaken = !this.isPhotoTaken;
+      const camera = this.$refs.camera;
+      const cameraWidth = camera.offsetWidth;
+      const cameraHeight = camera.offsetHeight;
+
+      const widthPercentage = 100;
+      const heightPercentage = 100;
+
+      // Convert the width and height percentages to pixels
+      const widthPixels = Math.round((widthPercentage / 100) * cameraWidth);
+      const heightPixels = Math.round((heightPercentage / 100) * cameraHeight);
+
+      const canvas = this.$refs.canvas;
+      const ctx = canvas.getContext('2d');
       
-      const context = this.$refs.canvas.getContext('2d');
-      const width = this.$refs.canvas.width;
-      const height = this.$refs.canvas.height;
-      context.drawImage(this.$refs.camera, 0, 0, width, height);
+      // Set the canvas dimensions before capturing the image data
+      canvas.width = widthPixels;
+      canvas.height = heightPixels;
+
+      this.canvasWidth = widthPixels;
+      this.canvasHeight = heightPixels;
+
+      // Draw the camera image on the canvas
+      ctx.drawImage(camera, 0, 0, widthPixels, heightPixels);
+
+      // Capture the image data from the canvas
+      const imageData = ctx.getImageData(0, 0, widthPixels, heightPixels);
+
+      this.isPhotoTaken = !this.isPhotoTaken;
       this.isUploadReady = true;
     },
     uploadFile() {
@@ -179,8 +199,8 @@ export default {
           "url": this.videoUrl, 
           "mimeType": "video/webm", 
           "blob": this.blob, 
-          "width": '100%', 
-          "height":"100%"
+          "width": this.canvasWidth, 
+          "height": this.canvasHeight
         }); 
         this.resetVideo(); 
       } else {
