@@ -187,9 +187,6 @@ export default {
       // Draw the camera image on the canvas
       ctx.drawImage(camera, 0, 0, widthPixels, heightPixels);
 
-      // Capture the image data from the canvas
-      const imageData = ctx.getImageData(0, 0, widthPixels, heightPixels);
-
       this.isPhotoTaken = !this.isPhotoTaken;
       this.isUploadReady = true;
     },
@@ -208,17 +205,14 @@ export default {
         this.$emit("uploadFile", this.$refs.canvas.toDataURL());
       }
       this.isUploadReady = false;
+      this.stopStream();
     },
     recordVideo() {
       this.recorder.start();
       this.isRecording = true;
     },
     stopVideo() {
-      this.recorder.stop();
-      for (const track of this.stream.getTracks()) {
-          track.stop();
-      }
-      this.$refs.camera.srcObject = null;
+      this.stopStream();
       this.isRecording = false;
       this.isUploadReady = true;
     },
@@ -236,17 +230,17 @@ export default {
       const width = this.cameraWidth ? this.cameraWidth : context.canvas.width;
       const height = this.cameraHeight ? this.cameraHeight : context.canvas.height;
       context.drawImage(this.$refs.overlay, 0, 0, width, height);
+    },
+    stopStream() {
+      const stream = this.$refs.camera.srcObject;
+      stream.getVideoTracks()[0].stop();
     }
   },
   mounted() {
     this.setupCamera();
   },
-  destroyed() {
-    if (this.stream) {
-      this.stream.getTracks().forEach(function(track) {
-        track.stop();
-      });
-    }
-  }
+  beforeDestroy() {
+    this.stopStream();
+  },
 }
 </script>
