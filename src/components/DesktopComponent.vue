@@ -212,7 +212,9 @@ export default {
       this.isRecording = true;
     },
     stopVideo() {
+      this.recorder.stop();
       this.stopStream();
+      this.$refs.camera.srcObject = null;
       this.isRecording = false;
       this.isUploadReady = true;
     },
@@ -232,15 +234,18 @@ export default {
       context.drawImage(this.$refs.overlay, 0, 0, width, height);
     },
     stopStream() {
-      const stream = this.$refs.camera.srcObject;
-      stream.getVideoTracks()[0].stop();
+      if (this.stream) {
+        for (const track of this.stream.getTracks()) {
+          track.stop();
+        }
+      }
     }
   },
   mounted() {
     this.setupCamera();
   },
-  beforeDestroy() {
+  beforeDestroyed() {
     this.stopStream();
-  },
+  }
 }
 </script>
