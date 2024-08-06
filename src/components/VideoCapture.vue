@@ -36,7 +36,7 @@ export default {
   },
   computed: {
     captureComponent() {
-      // Determin which component to use based on isMobile flag
+      // Determine which component to use based on isMobile flag
       return this.isMobile ? 'MobileComponent' : 'DesktopComponent';
     },
     captureComponentProps() {
