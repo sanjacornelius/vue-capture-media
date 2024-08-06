@@ -192,7 +192,6 @@ export default {
     },
     uploadFile() {
       if (this.mode === 'video') {
-        console.log('canvas width', this.canvasWidth, this.canvasHeight);
         this.$emit("uploadFile", {
           "url": this.videoUrl, 
           "mimeType": "video/webm", 
