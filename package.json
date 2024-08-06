@@ -12,7 +12,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "build-bundle": "vue-cli-service build --target lib --name vue-capture-media ./src/components/index.js",
+    "build-bundle": "NODE_OPTIONS=--openssl-legacy-provider vue-cli-service build --target lib --name vue-capture-media ./src/components/index.js",
     "lint-fix": "vue-clie-service lint"
   },
   "main": "./dist/vue-capture-media.common.js",
@@ -31,20 +31,20 @@
     "@panter/vue-i18next": "^0.15.2",
     "@vue/cli-plugin-babel": "^3.8.0",
     "@vue/cli-plugin-eslint": "^3.8.0",
-    "i18next": "^15.0.8",
     "@vue/cli-service": "^3.8.0",
     "babel-eslint": "^10.0.1",
     "bootstrap": "^4.5.3",
     "bootstrap-vue": "^2.19.0",
     "eslint-plugin-vue": "^5.0.0",
+    "i18next": "^15.0.8",
     "sass": "^1.51.0",
     "sass-loader": "^9.0.3",
-    "vue-template-compiler": "^2.6.14",
     "vue": "^2.6.14",
+    "vue-deepset": "^0.6.3",
     "vue-router": "^3.4.9",
     "vue-slider-component": "^3.2.24",
-    "vuex": "^3.6.2",
-    "vue-deepset": "^0.6.3"
+    "vue-template-compiler": "^2.6.14",
+    "vuex": "^3.6.2"
   },
   "peerDependencies": {
     "@panter/vue-i18next": "^0.15.0",
@@ -63,8 +63,8 @@
     "not ie <= 8"
   ],
   "engines": {
-    "npm": ">=8",
-    "node": ">=16 <18"
+    "node": ">=16",
+    "npm": ">=8"
   },
   "eslintConfig": {
     "root": true,
